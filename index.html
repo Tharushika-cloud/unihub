@@ -249,6 +249,38 @@
     .stat-box span { color: var(--muted); font-size: 0.78rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.06em; }
 
     .form-row { display: grid; grid-template-columns: 1fr 1fr auto; gap: 10px; margin-bottom: 14px; }
+    .deadline-form {
+      grid-template-columns: 1fr;
+      align-items: stretch;
+      overflow: visible;
+    }
+    .deadline-form input,
+    .deadline-form button {
+      min-width: 0;
+      width: 100%;
+      height: 54px;
+    }
+    .deadline-form #deadlineTitle {
+      display: block;
+      color: var(--text);
+      background: #ffffff;
+      padding-left: 16px;
+      padding-right: 16px;
+      caret-color: var(--primary);
+    }
+    .deadline-form #deadlineTitle::placeholder {
+      color: #64748b;
+      opacity: 1;
+    }
+    .deadline-form #deadlineDate {
+      color: var(--text);
+      background: #ffffff;
+    }
+    .deadline-form .btn {
+      justify-content: center;
+      border-radius: 16px;
+      white-space: nowrap;
+    }
     .field { display: grid; gap: 6px; margin-bottom: 12px; }
     label { color: var(--muted); font-size: 0.74rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.07em; }
     input, select, textarea { width: 100%; border: 1px solid var(--line); border-radius: 14px; padding: 11px 12px; background: #fff; color: var(--text); outline: none; }
@@ -966,7 +998,7 @@
         <div class="grid-2" style="margin-top:18px;">
           <div class="panel card">
             <h3>Upcoming Deadlines</h3>
-            <div class="form-row">
+            <div class="form-row deadline-form">
               <input id="deadlineTitle" placeholder="Task or assignment name">
               <input id="deadlineDate" type="datetime-local">
               <button class="btn btn-primary btn-small" id="addDeadlineBtn">Add</button>
@@ -1206,13 +1238,21 @@
       const DAYS = ['Monday','Tuesday','Wednesday','Thursday','Friday'];
       let deadlines = loadJson(LS.deadlines, []);
       let timetable = loadJson(LS.timetable, {});
+      let lastDeadlineMinuteKey = null;
 
       function updateClock() {
         const now = new Date();
         $('dashClock').textContent = now.toLocaleTimeString();
         $('dashDate').textContent = now.toLocaleDateString([], { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-        renderDeadlines(false);
-        renderPriorityList();
+
+        // Deadline countdown text only changes meaningfully once per minute.
+        // Rebuilding this list every second made the card look like it was bouncing.
+        const minuteKey = Math.floor(now.getTime() / 60000);
+        if (minuteKey !== lastDeadlineMinuteKey) {
+          lastDeadlineMinuteKey = minuteKey;
+          renderDeadlines(false);
+          renderPriorityList();
+        }
       }
       function renderDashboardStats() {
         const today = new Date().toLocaleDateString('en-US', { weekday: 'long' });
