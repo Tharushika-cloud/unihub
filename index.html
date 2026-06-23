@@ -159,6 +159,20 @@
     .preview-stat { padding: 16px; border-radius: var(--radius-sm); background: var(--surface-soft); border: 1px solid var(--line); }
     .preview-stat strong { display: block; color: var(--primary); font-size: 1.8rem; letter-spacing: -0.04em; }
     .preview-stat span { color: var(--muted); font-weight: 800; font-size: 0.76rem; }
+    .preview-stat.gpa-preview-pop { animation: gpaPreviewPop 0.46s ease both; }
+    .preview-stat.gpa-excellent { border-color: rgba(34, 197, 94, 0.35); background: linear-gradient(135deg, #ecfdf5, #ffffff); }
+    .preview-stat.gpa-good { border-color: rgba(16, 185, 129, 0.35); background: linear-gradient(135deg, #f0fdfa, #ffffff); }
+    .preview-stat.gpa-average { border-color: rgba(250, 204, 21, 0.42); background: linear-gradient(135deg, #fefce8, #ffffff); }
+    .preview-stat.gpa-weak { border-color: rgba(251, 113, 133, 0.42); background: linear-gradient(135deg, #fff1f2, #ffffff); }
+    .preview-stat.gpa-excellent strong { color: #16a34a; }
+    .preview-stat.gpa-good strong { color: #10b981; }
+    .preview-stat.gpa-average strong { color: #ca8a04; }
+    .preview-stat.gpa-weak strong { color: #e11d48; }
+    @keyframes gpaPreviewPop {
+      0% { transform: scale(0.98); }
+      55% { transform: scale(1.035); }
+      100% { transform: scale(1); }
+    }
 
     .section { padding: 54px 0; }
     .section-top { text-align: center; max-width: 760px; margin: 0 auto 26px; }
@@ -171,6 +185,41 @@
     .feature-icon { width: 52px; height: 52px; border-radius: 17px; display: grid; place-items: center; margin-bottom: 15px; background: var(--primary-soft); color: var(--primary); font-size: 1.25rem; }
     .feature-card h3 { margin-bottom: 8px; font-size: 1rem; }
     .feature-card p { color: var(--muted); line-height: 1.65; font-size: 0.92rem; }
+    .linked-feature {
+      cursor: pointer;
+      min-height: 210px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      touch-action: manipulation;
+      user-select: none;
+    }
+    .linked-feature .tap-hint {
+      margin-top: auto;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 11px;
+      border-radius: 999px;
+      background: var(--primary-soft);
+      color: var(--primary);
+      font-size: 0.74rem;
+      font-weight: 900;
+      letter-spacing: 0.02em;
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity 0.24s ease, transform 0.24s ease, background 0.24s ease;
+    }
+    .linked-feature .tap-hint::after { content: '→'; font-weight: 900; }
+    .linked-feature:hover .tap-hint,
+    .linked-feature:focus-visible .tap-hint { opacity: 1; transform: translateY(0); }
+    .linked-feature:focus-visible {
+      outline: none;
+      box-shadow:
+        0 0 0 4px rgba(37, 99, 235, 0.16),
+        0 24px 60px rgba(37, 99, 235, 0.16) !important;
+      border-color: rgba(37, 99, 235, 0.72) !important;
+    }
 
     .tool-page { padding: 36px 0 70px; }
     .page-title { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; flex-wrap: wrap; margin-bottom: 20px; }
@@ -216,17 +265,104 @@
     .department-buttons { display: grid; gap: 10px; }
     .department-btn { border: 1px solid var(--line); background: var(--surface); color: var(--text); border-radius: 16px; padding: 14px; text-align: left; font-weight: 900; transition: 0.22s ease; }
     .department-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
-    .gpa-result { padding: 22px; border-radius: var(--radius); background: linear-gradient(135deg, var(--primary), var(--cyan)); color: #fff; display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 14px; }
+    .gpa-result {
+      --gpa-ring-color: #bfdbfe;
+      --gpa-ring-track: rgba(255, 255, 255, 0.30);
+      padding: 22px;
+      border-radius: var(--radius);
+      background: linear-gradient(135deg, #2563eb, #22d3ee);
+      color: #fff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 18px;
+      margin-bottom: 14px;
+      transition: box-shadow 0.35s ease, transform 0.25s ease;
+      box-shadow: 0 18px 38px rgba(37, 99, 235, 0.20);
+    }
     .gpa-result strong { font-size: 2.6rem; letter-spacing: -0.06em; }
+    .gpa-result.gpa-neutral { --gpa-ring-color: #dbeafe; }
+    .gpa-result.gpa-excellent { --gpa-ring-color: #22c55e; box-shadow: 0 18px 38px rgba(34, 197, 94, 0.20); }
+    .gpa-result.gpa-good { --gpa-ring-color: #10b981; box-shadow: 0 18px 38px rgba(16, 185, 129, 0.20); }
+    .gpa-result.gpa-average { --gpa-ring-color: #facc15; box-shadow: 0 18px 38px rgba(250, 204, 21, 0.20); }
+    .gpa-result.gpa-weak { --gpa-ring-color: #fb7185; box-shadow: 0 18px 38px rgba(251, 113, 133, 0.20); }
+    .gpa-score { text-align: right; }
+    .gpa-ring {
+      width: 88px;
+      height: 88px;
+      flex: 0 0 88px;
+      position: relative;
+      display: grid;
+      place-items: center;
+      filter: drop-shadow(0 8px 16px rgba(15, 23, 42, 0.14));
+    }
+    .gpa-ring svg {
+      width: 88px;
+      height: 88px;
+      transform: rotate(-90deg);
+    }
+    .gpa-ring-bg,
+    .gpa-ring-progress {
+      fill: none;
+      stroke-width: 9;
+    }
+    .gpa-ring-bg { stroke: var(--gpa-ring-track); }
+    .gpa-ring-progress {
+      stroke: var(--gpa-ring-color);
+      stroke-linecap: round;
+      stroke-dasharray: 213.63;
+      stroke-dashoffset: 213.63;
+      transition: stroke-dashoffset 0.55s ease, stroke 0.35s ease;
+    }
+    .gpa-ring-label {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      font-size: 0.72rem;
+      font-weight: 900;
+      color: #fff;
+      letter-spacing: -0.02em;
+      font-variant-numeric: tabular-nums;
+    }
+    .gpa-result.gpa-pop { animation: gpaColorPop 0.42s ease both; }
+    @keyframes gpaColorPop { 0% { transform: scale(0.985); } 55% { transform: scale(1.015); } 100% { transform: scale(1); } }
     .semester-card { border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); overflow: hidden; margin-bottom: 14px; }
     .semester-head { display: flex; justify-content: space-between; gap: 12px; align-items: center; padding: 14px; background: var(--primary-soft); }
     .semester-body { padding: 14px; }
     .course-row { display: grid; grid-template-columns: 1fr 110px 90px 42px; gap: 9px; margin-bottom: 9px; }
+    .semester-card input, .semester-card select { background: #fff; pointer-events: auto; }
+    .semester-card input:focus, .semester-card select:focus { background: #fff; border-color: var(--primary); box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12); }
     .scale-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; margin-top: 12px; color: var(--muted); font-size: 0.78rem; }
     .message { display: none; padding: 12px 14px; border-radius: 14px; margin-bottom: 12px; font-weight: 800; }
     .message.show { display: block; }
     .message.success { background: var(--mint-soft); color: #047857; }
     .message.error { background: var(--rose-soft); color: #be123c; }
+
+    .overall-toolbar {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 14px;
+    }
+    .overall-box {
+      animation: overallOpen 0.28s cubic-bezier(.2,.8,.2,1) both;
+    }
+    @keyframes overallOpen {
+      from { opacity: 0; transform: translateY(-8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .grade-select {
+      font-weight: 900;
+      transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+    }
+    .grade-empty { background: #ffffff; color: var(--muted); border-color: var(--line); }
+    .grade-a { background: #dcfce7; color: #166534; border-color: #86efac; box-shadow: 0 6px 18px rgba(22, 101, 52, 0.10); }
+    .grade-b { background: #dbeafe; color: #1d4ed8; border-color: #93c5fd; box-shadow: 0 6px 18px rgba(29, 78, 216, 0.10); }
+    .grade-c { background: #fef9c3; color: #854d0e; border-color: #fde68a; box-shadow: 0 6px 18px rgba(133, 77, 14, 0.10); }
+    .grade-d { background: #ffedd5; color: #c2410c; border-color: #fdba74; box-shadow: 0 6px 18px rgba(194, 65, 12, 0.10); }
+    .grade-e, .grade-f { background: #ffe4e6; color: #be123c; border-color: #fda4af; box-shadow: 0 6px 18px rgba(190, 18, 60, 0.10); }
+
+    .ng-note { margin-top: 6px; font-size: 0.72rem; font-weight: 700; }
 
     .resource-layout { display: grid; grid-template-columns: 330px 1fr; gap: 18px; align-items: start; }
     .resource-controls { display: grid; grid-template-columns: 1fr 220px; gap: 10px; margin-bottom: 14px; }
@@ -282,9 +418,431 @@
       .scale-grid { grid-template-columns: repeat(3, 1fr); }
       .hero { padding-top: 44px; }
     }
-  </style>
+
+
+    /* --- Extra animation and hover polish pack --- */
+    @media (prefers-reduced-motion: no-preference) {
+      body::before,
+      body::after {
+        content: '';
+        position: fixed;
+        width: 360px;
+        height: 360px;
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: -1;
+        filter: blur(20px);
+        opacity: 0.24;
+        animation: orbFloat 12s ease-in-out infinite alternate;
+      }
+      body::before { left: -140px; top: 110px; background: rgba(37, 99, 235, 0.22); }
+      body::after { right: -150px; bottom: 80px; background: rgba(16, 185, 129, 0.20); animation-delay: 1.8s; }
+
+      .brand-icon { animation: iconBob 4.8s ease-in-out infinite; }
+      .hero-preview { animation: floatCard 6s ease-in-out infinite; }
+      .eyebrow { animation: softPulse 2.8s ease-in-out infinite; }
+      .page.active { animation: pageEnter 0.42s cubic-bezier(.2,.8,.2,1) both; }
+      .page.active .card,
+      .page.active .glass-card,
+      .page.active .stat-box,
+      .page.active .shortcut,
+      .page.active .resource-card,
+      .page.active .semester-card,
+      .page.active .list-item,
+      .page.active .todo-item,
+      .page.active .subject-chip {
+        animation: itemRise 0.48s cubic-bezier(.2,.8,.2,1) both;
+      }
+      .page.active .grid-3 > *:nth-child(1), .page.active .stat-grid > *:nth-child(1), .page.active .shortcut-grid > *:nth-child(1) { animation-delay: 0.04s; }
+      .page.active .grid-3 > *:nth-child(2), .page.active .stat-grid > *:nth-child(2), .page.active .shortcut-grid > *:nth-child(2) { animation-delay: 0.09s; }
+      .page.active .grid-3 > *:nth-child(3), .page.active .stat-grid > *:nth-child(3), .page.active .shortcut-grid > *:nth-child(3) { animation-delay: 0.14s; }
+      .page.active .grid-3 > *:nth-child(4), .page.active .stat-grid > *:nth-child(4) { animation-delay: 0.19s; }
+      .bar-fill { animation: progressGlow 2.8s ease-in-out infinite; }
+      .timer-ring { animation: timerBreath 3.2s ease-in-out infinite; }
+    }
+
+    .app-nav {
+      transition: box-shadow 0.25s ease, background 0.25s ease, transform 0.25s ease;
+      animation: navDrop 0.5s cubic-bezier(.2,.8,.2,1) both;
+    }
+    .app-nav:hover { box-shadow: 0 14px 34px rgba(15, 23, 42, 0.08); }
+
+    .brand,
+    .nav-link,
+    .btn,
+    .department-btn,
+    .shortcut,
+    .icon-action,
+    .resource-card,
+    .stat-box,
+    .feature-card,
+    .list-item,
+    .todo-item,
+    .subject-chip,
+    .semester-card,
+    input,
+    select,
+    textarea {
+      will-change: transform, box-shadow;
+    }
+
+    .brand { transition: transform 0.25s ease; }
+    .brand:hover { transform: translateY(-2px); }
+
+    .nav-link {
+      position: relative;
+      overflow: hidden;
+    }
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      left: 14px;
+      right: 14px;
+      bottom: 6px;
+      height: 2px;
+      border-radius: 999px;
+      background: currentColor;
+      transform: scaleX(0);
+      transform-origin: center;
+      transition: transform 0.25s ease;
+      opacity: 0.55;
+    }
+    .nav-link:hover::after,
+    .nav-link.active::after { transform: scaleX(1); }
+    .nav-link:active { transform: scale(0.96); }
+
+    .btn,
+    .department-btn,
+    .shortcut,
+    .icon-action {
+      position: relative;
+      overflow: hidden;
+    }
+    .btn::before,
+    .department-btn::before,
+    .shortcut::before,
+    .feature-card::before,
+    .resource-card::before,
+    .stat-box::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(120deg, transparent 0%, rgba(255,255,255,0.5) 45%, transparent 70%);
+      transform: translateX(-120%);
+      transition: transform 0.55s ease;
+      pointer-events: none;
+    }
+    .btn:hover::before,
+    .department-btn:hover::before,
+    .shortcut:hover::before,
+    .feature-card:hover::before,
+    .resource-card:hover::before,
+    .stat-box:hover::before { transform: translateX(120%); }
+    .btn:active,
+    .department-btn:active,
+    .shortcut:active,
+    .icon-action:active { transform: scale(0.97); }
+
+    .glass-card,
+    .card,
+    .stat-box,
+    .shortcut,
+    .resource-card,
+    .semester-card,
+    .list-item,
+    .todo-item,
+    .subject-chip,
+    .preview-stat {
+      transition: transform 0.26s ease, box-shadow 0.26s ease, border-color 0.26s ease, background 0.26s ease;
+    }
+    .glass-card:hover,
+    .card:hover,
+    .stat-box:hover,
+    .resource-card:hover,
+    .semester-card:hover,
+    .preview-stat:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 24px 60px rgba(15, 23, 42, 0.13);
+      border-color: rgba(37, 99, 235, 0.26);
+    }
+    .list-item:hover,
+    .todo-item:hover,
+    .subject-chip:hover {
+      transform: translateX(4px);
+      background: #ffffff;
+      border-color: rgba(37, 99, 235, 0.22);
+      box-shadow: var(--shadow-sm);
+    }
+    .department-btn:hover {
+      transform: translateY(-3px) scale(1.01);
+      box-shadow: var(--shadow-sm);
+      border-color: rgba(37, 99, 235, 0.28);
+    }
+    .department-btn.active { box-shadow: 0 14px 30px rgba(37, 99, 235, 0.22); }
+
+    .gpa-jump-highlight {
+      animation: gpaPanelGlow 1.15s ease both;
+    }
+
+    @keyframes gpaPanelGlow {
+      0% { box-shadow: var(--shadow); transform: translateY(0); }
+      35% { box-shadow: 0 0 0 5px rgba(37, 99, 235, 0.14), 0 22px 45px rgba(37, 99, 235, 0.18); transform: translateY(-4px); }
+      100% { box-shadow: var(--shadow); transform: translateY(0); }
+    }
+    .feature-icon {
+      transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+    }
+    .feature-card:hover .feature-icon,
+    .shortcut:hover .feature-icon,
+    .card:hover .feature-icon,
+    .resource-card:hover .tagline {
+      transform: rotate(-4deg) scale(1.08);
+      box-shadow: 0 12px 26px rgba(37, 99, 235, 0.16);
+    }
+    input:hover,
+    select:hover,
+    textarea:hover {
+      border-color: rgba(37, 99, 235, 0.25);
+      box-shadow: 0 8px 22px rgba(15, 23, 42, 0.05);
+    }
+    input:focus,
+    select:focus,
+    textarea:focus {
+      transform: translateY(-1px);
+    }
+    tbody tr { transition: background 0.22s ease, transform 0.22s ease; }
+    tbody tr:hover { background: rgba(37, 99, 235, 0.045); }
+    .timer-inner { transition: transform 0.25s ease, box-shadow 0.25s ease; }
+    .timer-ring:hover .timer-inner { transform: scale(0.98); box-shadow: inset 0 0 0 8px rgba(37, 99, 235, 0.04); }
+    .check-btn.done { animation: checkedPop 0.24s ease both; }
+
+    .toast-stack {
+      position: fixed;
+      top: 92px;
+      right: 18px;
+      width: min(360px, calc(100vw - 36px));
+      z-index: 9999;
+      display: grid;
+      gap: 10px;
+      pointer-events: none;
+    }
+    .toast {
+      pointer-events: auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 13px 15px;
+      border-radius: 18px;
+      background: rgba(23, 32, 51, 0.94);
+      color: #fff;
+      box-shadow: 0 18px 45px rgba(15, 23, 42, 0.22);
+      border: 1px solid rgba(255,255,255,0.12);
+      animation: toastIn 0.28s cubic-bezier(.2,.8,.2,1) both;
+      backdrop-filter: blur(14px);
+    }
+    .toast.success { background: rgba(5, 122, 85, 0.94); }
+    .toast.error { background: rgba(190, 18, 60, 0.94); }
+    .toast span { font-size: 0.86rem; font-weight: 800; line-height: 1.35; }
+    .toast button {
+      border: none;
+      background: rgba(255,255,255,0.14);
+      color: #fff;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+    }
+    .toast.hide { animation: toastOut 0.24s ease both; }
+
+    @keyframes navDrop { from { opacity: 0; transform: translateY(-16px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes pageEnter { from { opacity: 0; transform: translateY(16px) scale(0.992); } to { opacity: 1; transform: translateY(0) scale(1); } }
+    @keyframes itemRise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes iconBob { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-4px) rotate(-3deg); } }
+    @keyframes floatCard { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+    @keyframes softPulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.0); } 50% { box-shadow: 0 0 0 7px rgba(37, 99, 235, 0.06); } }
+    @keyframes progressGlow { 0%, 100% { filter: brightness(1); } 50% { filter: brightness(1.14); } }
+    @keyframes timerBreath { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.018); } }
+    @keyframes orbFloat { from { transform: translate3d(0,0,0) scale(1); } to { transform: translate3d(42px,-28px,0) scale(1.08); } }
+    @keyframes checkedPop { 0% { transform: scale(0.75); } 70% { transform: scale(1.14); } 100% { transform: scale(1); } }
+    @keyframes toastIn { from { opacity: 0; transform: translateX(24px) scale(0.96); } to { opacity: 1; transform: translateX(0) scale(1); } }
+    @keyframes toastOut { from { opacity: 1; transform: translateX(0) scale(1); } to { opacity: 0; transform: translateX(24px) scale(0.96); } }
+    @keyframes sparkRipple { to { opacity: 0; transform: translate(-50%, -50%) scale(16); } }
+
+  
+
+    /* Blue outline polish requested: soft blue frame around white cards */
+    .glass-card,
+    .card,
+    .feature-card,
+    .stat-box,
+    .shortcut,
+    .resource-card,
+    .semester-card,
+    .list-item,
+    .todo-item,
+    .preview-stat,
+    .subject-chip {
+      border-color: rgba(37, 99, 235, 0.30) !important;
+      box-shadow:
+        0 0 0 1px rgba(37, 99, 235, 0.08),
+        0 18px 45px rgba(37, 99, 235, 0.08),
+        0 10px 26px rgba(15, 23, 42, 0.06) !important;
+    }
+
+    .feature-card,
+    .shortcut,
+    .panel.card,
+    .hero-preview,
+    .resource-card {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .feature-card::after,
+    .shortcut::after,
+    .panel.card::after,
+    .hero-preview::before,
+    .resource-card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      pointer-events: none;
+      box-shadow: inset 0 0 0 1.5px rgba(37, 99, 235, 0.26);
+      transition: box-shadow 0.28s ease, opacity 0.28s ease;
+      opacity: 0.95;
+    }
+
+    .feature-card:hover,
+    .shortcut:hover,
+    .glass-card:hover,
+    .card:hover,
+    .stat-box:hover,
+    .resource-card:hover,
+    .semester-card:hover,
+    .preview-stat:hover,
+    .list-item:hover,
+    .todo-item:hover,
+    .subject-chip:hover {
+      border-color: rgba(37, 99, 235, 0.68) !important;
+      box-shadow:
+        0 0 0 3px rgba(37, 99, 235, 0.10),
+        0 26px 65px rgba(37, 99, 235, 0.16),
+        0 12px 30px rgba(15, 23, 42, 0.08) !important;
+    }
+
+    .feature-card:hover::after,
+    .shortcut:hover::after,
+    .panel.card:hover::after,
+    .hero-preview:hover::before,
+    .resource-card:hover::after {
+      box-shadow: inset 0 0 0 2.5px rgba(37, 99, 235, 0.55);
+    }
+
+    .department-btn,
+    .nav-link.active,
+    .nav-link:hover {
+      box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.12);
+    }
+
+    .feature-icon,
+    .title-icon,
+    .brand-icon {
+      box-shadow: 0 12px 26px rgba(37, 99, 235, 0.18);
+    }
+
+  
+
+    /* Blue icon polish: soft blue square + clear blue icon */
+    .feature-icon,
+    .title-icon,
+    .shortcut .feature-icon {
+      background: linear-gradient(135deg, #dbeafe 0%, #eff6ff 100%) !important;
+      color: #2563eb !important;
+      border: 1px solid rgba(37, 99, 235, 0.12) !important;
+      box-shadow:
+        0 12px 26px rgba(37, 99, 235, 0.16),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.75) !important;
+    }
+
+    .feature-icon i,
+    .title-icon i,
+    .shortcut .feature-icon i {
+      color: #2563eb !important;
+      text-shadow: 0 6px 16px rgba(37, 99, 235, 0.18);
+    }
+
+    .feature-card:hover .feature-icon,
+    .shortcut:hover .feature-icon,
+    .card:hover .feature-icon {
+      background: linear-gradient(135deg, #bfdbfe 0%, #dbeafe 100%) !important;
+      color: #1d4ed8 !important;
+      border-color: rgba(37, 99, 235, 0.28) !important;
+      box-shadow:
+        0 16px 34px rgba(37, 99, 235, 0.24),
+        0 0 0 5px rgba(37, 99, 235, 0.06) !important;
+    }
+
+    .feature-card:hover .feature-icon i,
+    .shortcut:hover .feature-icon i,
+    .card:hover .feature-icon i {
+      color: #1d4ed8 !important;
+    }
+
+    .stat-box strong,
+    .preview-stat strong,
+    .clock-time,
+    .resource-card .tagline,
+    .subject-chip strong {
+      color: #2563eb;
+    }
+
+
+
+    /* Clean stat text fix: remove ghost/shadow look from dashboard/resource counters */
+    .stat-box::before,
+    .preview-stat::before {
+      display: none !important;
+      content: none !important;
+    }
+
+    .stat-box strong,
+    .stat-box span,
+    .preview-stat strong,
+    .preview-stat span,
+    .resource-card strong,
+    .subject-chip strong {
+      text-shadow: none !important;
+      filter: none !important;
+      -webkit-text-stroke: 0 !important;
+      opacity: 1 !important;
+    }
+
+    .stat-box strong,
+    .preview-stat strong {
+      color: #2563eb !important;
+      font-weight: 900 !important;
+      letter-spacing: -0.02em !important;
+    }
+
+    .stat-box span,
+    .preview-stat span {
+      color: #64748b !important;
+      font-weight: 800 !important;
+      letter-spacing: 0.04em !important;
+    }
+
+    .stat-box,
+    .preview-stat {
+      background: #ffffff !important;
+    }
+
+</style>
 </head>
 <body>
+  <div class="toast-stack" id="toastStack" aria-live="polite"></div>
   <nav class="app-nav">
     <div class="container nav-inner">
       <a class="brand" href="#home" data-page-link="home">
@@ -309,7 +867,7 @@
           <div>
             <span class="eyebrow"><i class="fa-solid fa-bolt"></i> All-in-one academic suite</span>
             <h1>Focus on <span>what matters</span> in your uni life.</h1>
-            <p>UniHub keeps your dashboard, deadlines, timetable, GPA calculator, resources and focus timer inside one clean interface. No file linking headache. Open this HTML file and everything is ready.</p>
+            <p>Plan your week, track deadlines, calculate GPA, save study resources and stay focused from one modern student workspace built for daily university life.</p>
             <div class="hero-actions">
               <button class="btn btn-primary" data-page-link="dashboard"><i class="fa-solid fa-gauge-high"></i> Enter Dashboard</button>
               <button class="btn btn-secondary" data-page-link="gpa"><i class="fa-solid fa-calculator"></i> GPA Calculator</button>
@@ -326,7 +884,7 @@
               <div class="bar-line"><div class="bar-label"><span>Focus Sessions</span><span>64%</span></div><div class="bar-track"><div class="bar-fill" style="width:64%"></div></div></div>
             </div>
             <div class="preview-stats">
-              <div class="preview-stat"><strong id="homeGpaPreview">3.85</strong><span>Sample GPA</span></div>
+              <div class="preview-stat" id="homeGpaCard"><strong id="homeGpaPreview">3.85</strong><span id="homeGpaLabel">Latest GPA</span></div>
               <div class="preview-stat"><strong id="homeTaskPreview">0</strong><span>Saved Tasks</span></div>
             </div>
           </div>
@@ -335,17 +893,17 @@
 
       <div class="container section">
         <div class="section-top">
-          <span class="eyebrow">Pages</span>
-          <h2>Five pages, one HTML file</h2>
-          <p>These are connected with internal navigation. You do not need to create separate CSS or JS files.</p>
+          <span class="eyebrow">Explore UniHub</span>
+          <h2>Your study tools, connected beautifully</h2>
+          <p>Move smoothly between your dashboard, GPA calculator, resource library and focus timer without breaking your study flow.</p>
         </div>
         <div class="grid-3">
-          <div class="feature-card card"><div class="feature-icon"><i class="fa-solid fa-house"></i></div><h3>Smart Landing Page</h3><p>Modern entry page with clear project introduction and smooth page flow.</p></div>
-          <div class="feature-card card"><div class="feature-icon"><i class="fa-solid fa-chart-line"></i></div><h3>Study Dashboard</h3><p>Live clock, timetable, priority tasks and upcoming deadlines saved in your browser.</p></div>
-          <div class="feature-card card"><div class="feature-icon"><i class="fa-solid fa-calculator"></i></div><h3>GPA Calculator</h3><p>Department route for IAT, AT, ET and ICT with grade calculation support.</p></div>
-          <div class="feature-card card"><div class="feature-icon"><i class="fa-solid fa-book-open"></i></div><h3>Resource Library</h3><p>Add subjects, save links, filter resources and mark favourites.</p></div>
-          <div class="feature-card card"><div class="feature-icon"><i class="fa-solid fa-stopwatch"></i></div><h3>Focus Timer</h3><p>Pomodoro timer and task manager with localStorage saving.</p></div>
-          <div class="feature-card card"><div class="feature-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></div><h3>UI/UX Polish</h3><p>Soft blue, mint and white theme with clean cards and hover effects.</p></div>
+          <div class="feature-card card linked-feature" data-page-link="home" role="button" tabindex="0" aria-label="Open Home page"><div class="feature-icon"><i class="fa-solid fa-house"></i></div><h3>Smart Landing Page</h3><p>Modern entry page with clear project introduction and smooth page flow.</p><span class="tap-hint">Tap to open</span></div>
+          <div class="feature-card card linked-feature" data-page-link="dashboard" role="button" tabindex="0" aria-label="Open Study Dashboard"><div class="feature-icon"><i class="fa-solid fa-chart-line"></i></div><h3>Study Dashboard</h3><p>Live clock, timetable, priority tasks and upcoming deadlines saved in your browser.</p><span class="tap-hint">Tap to open</span></div>
+          <div class="feature-card card linked-feature" data-page-link="gpa" role="button" tabindex="0" aria-label="Open GPA Calculator"><div class="feature-icon"><i class="fa-solid fa-calculator"></i></div><h3>GPA Calculator</h3><p>Department route for IAT, AT, ET and ICT with grade calculation support.</p><span class="tap-hint">Tap to open</span></div>
+          <div class="feature-card card linked-feature" data-page-link="resources" role="button" tabindex="0" aria-label="Open Resource Library"><div class="feature-icon"><i class="fa-solid fa-book-open"></i></div><h3>Resource Library</h3><p>Add subjects, save links, filter resources and mark favourites.</p><span class="tap-hint">Tap to open</span></div>
+          <div class="feature-card card linked-feature" data-page-link="focus" role="button" tabindex="0" aria-label="Open Focus Timer"><div class="feature-icon"><i class="fa-solid fa-stopwatch"></i></div><h3>Focus Timer</h3><p>Pomodoro timer and task manager with localStorage saving.</p><span class="tap-hint">Tap to open</span></div>
+          <div class="feature-card card linked-feature" data-page-link="home" role="button" tabindex="0" aria-label="Open Home page UI overview"><div class="feature-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></div><h3>UI/UX Polish</h3><p>Soft blue, mint and white theme with clean cards and hover effects.</p><span class="tap-hint">Tap to open</span></div>
         </div>
       </div>
     </section>
@@ -418,6 +976,7 @@
           <aside class="panel card">
             <h3>Select Department</h3>
             <p class="soft-text" style="margin-bottom:14px;">Route rule: IAT uses fixed subjects. Other departments use custom semesters.</p>
+            <p class="soft-text" style="margin-bottom:14px;font-size:0.82rem;">Click AT, ET or ICT and it will jump straight to the GPA calculator.</p>
             <div class="department-buttons" id="departmentButtons">
               <button class="department-btn active" data-dept="AT">AT General Calculator</button>
               <button class="department-btn" data-dept="ET">ET General Calculator</button>
@@ -426,7 +985,7 @@
             </div>
           </aside>
           <section class="panel card" id="generalGpaPanel">
-            <div class="gpa-result"><div><span>Department</span><h3 id="generalDeptLabel">AT</h3></div><div><span>Cumulative GPA</span><strong id="generalGpaValue">0.00</strong></div></div>
+            <div class="gpa-result gpa-neutral" id="generalGpaResult"><div><span>Department</span><h3 id="generalDeptLabel">AT</h3></div><div class="gpa-score"><span>Cumulative GPA</span><strong id="generalGpaValue">0.00</strong></div><div class="gpa-ring" data-gpa-ring aria-label="GPA progress out of 4"><svg viewBox="0 0 88 88" aria-hidden="true"><circle class="gpa-ring-bg" cx="44" cy="44" r="34"></circle><circle class="gpa-ring-progress" data-gpa-ring-progress cx="44" cy="44" r="34"></circle></svg><span class="gpa-ring-label" data-gpa-ring-label>0/4</span></div></div>
             <div id="generalSemesters"></div>
             <button class="btn btn-primary" id="addGeneralSemester"><i class="fa-solid fa-plus"></i> Add Semester</button>
             <div class="scale-grid" id="gradeScaleGrid"></div>
@@ -442,11 +1001,14 @@
             <div class="matrix-wrap" style="margin:12px 0;"><table><thead><tr><th>Code</th><th>Course</th><th>Credits</th><th>Grade</th></tr></thead><tbody id="iatSubjectBody"></tbody></table></div>
             <button class="btn btn-primary" id="calculateIatGpa"><i class="fa-solid fa-calculator"></i> Calculate GPA</button>
             <button class="btn btn-secondary" id="saveIatGpa"><i class="fa-solid fa-floppy-disk"></i> Save Semester</button>
-            <div class="gpa-result" style="margin-top:14px;"><div><span>Semester GPA</span><strong id="iatSemesterGpa">0.00</strong></div><div><span>Status</span><h3 id="iatStatus">Not calculated</h3></div></div>
+            <div class="gpa-result gpa-neutral" id="iatSemesterResult" style="margin-top:14px;"><div><span>Semester GPA</span><strong id="iatSemesterGpa">0.00</strong></div><div class="gpa-score"><span>Status</span><h3 id="iatStatus">Not calculated</h3></div><div class="gpa-ring" data-gpa-ring aria-label="GPA progress out of 4"><svg viewBox="0 0 88 88" aria-hidden="true"><circle class="gpa-ring-bg" cx="44" cy="44" r="34"></circle><circle class="gpa-ring-progress" data-gpa-ring-progress cx="44" cy="44" r="34"></circle></svg><span class="gpa-ring-label" data-gpa-ring-label>0/4</span></div></div>
             <div class="panel" style="padding:0;margin-top:16px;">
               <h3>Saved IAT Semesters</h3>
               <div class="matrix-wrap"><table><thead><tr><th>Level</th><th>Semester</th><th>Credits</th><th>GPA</th><th>Action</th></tr></thead><tbody id="iatSavedBody"></tbody></table></div>
-              <div class="gpa-result" style="margin-top:14px;"><div><span>Overall GPA</span><strong id="iatOverallGpa">0.00</strong></div><div><span>Total Credits</span><h3 id="iatOverallCredits">0</h3></div></div>
+              <div class="overall-toolbar">
+                <button class="btn btn-secondary btn-small" id="toggleIatOverall" type="button"><i class="fa-solid fa-eye"></i> View Overall GPA</button>
+              </div>
+              <div class="gpa-result overall-box hidden gpa-neutral" id="iatOverallBox" style="margin-top:14px;"><div><span>Overall GPA</span><strong id="iatOverallGpa">0.00</strong></div><div class="gpa-score"><span>Total Credits</span><h3 id="iatOverallCredits">0</h3></div><div class="gpa-ring" data-gpa-ring aria-label="GPA progress out of 4"><svg viewBox="0 0 88 88" aria-hidden="true"><circle class="gpa-ring-bg" cx="44" cy="44" r="34"></circle><circle class="gpa-ring-progress" data-gpa-ring-progress cx="44" cy="44" r="34"></circle></svg><span class="gpa-ring-label" data-gpa-ring-label>0/4</span></div></div>
             </div>
           </section>
         </div>
@@ -546,6 +1108,7 @@
       const LS = {
         deadlines: 'unihub_deadlines_v1', timetable: 'unihub_timetable_v1',
         generalGpa: 'unihub_general_gpa_v1_', iat: 'unihub_iat_saved_v1',
+        latestGpa: 'unihub_latest_calculated_gpa_v1',
         subjects: 'unihub_subjects_v1', resources: 'unihub_resources_v1',
         focus: 'unihub_focus_v1', notes: 'unihub_notes_v1'
       };
@@ -553,21 +1116,60 @@
       function saveJson(key, data) { localStorage.setItem(key, JSON.stringify(data)); }
       function safeText(str) { return String(str ?? '').replace(/[&<>"]/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[s])); }
       function formatDate(ts) { return new Date(ts).toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' }); }
-      function toast(msg) { alert(msg); }
+      function toast(msg, type = 'info') {
+        const stack = $('toastStack');
+        if (!stack) return alert(msg);
+        const item = document.createElement('div');
+        item.className = 'toast ' + type;
+        item.innerHTML = `<span>${safeText(msg)}</span><button type="button" aria-label="Close">×</button>`;
+        const close = () => { item.classList.add('hide'); setTimeout(() => item.remove(), 260); };
+        item.querySelector('button').addEventListener('click', close);
+        stack.appendChild(item);
+        setTimeout(close, 3200);
+      }
 
       function showPage(page) {
         qsa('.page').forEach(p => p.classList.remove('active'));
         const target = $('page-' + page) || $('page-home');
         target.classList.add('active');
+        target.querySelectorAll('.card, .glass-card, .feature-card, .stat-box, .shortcut, .resource-card, .list-item, .todo-item').forEach((el, index) => {
+          el.style.animationDelay = Math.min(index * 0.035, 0.28) + 's';
+        });
         qsa('[data-page-link]').forEach(btn => btn.classList.toggle('active', btn.dataset.pageLink === page));
         if (location.hash !== '#' + page) history.replaceState(null, '', '#' + page);
         $('navLinks').classList.remove('open');
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }
       qsa('[data-page-link]').forEach(el => el.addEventListener('click', () => showPage(el.dataset.pageLink)));
+      qsa('.linked-feature[data-page-link]').forEach(el => {
+        el.addEventListener('keydown', event => {
+          if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            showPage(el.dataset.pageLink);
+          }
+        });
+      });
       $('menuToggle').addEventListener('click', () => $('navLinks').classList.toggle('open'));
       const initial = (location.hash || '#home').replace('#', '');
       showPage(['home','dashboard','gpa','resources','focus'].includes(initial) ? initial : 'home');
+
+      document.addEventListener('pointerdown', event => {
+        const target = event.target.closest('.btn, .nav-link, .shortcut, .linked-feature, .department-btn, .icon-action, .check-btn');
+        if (!target) return;
+        const spark = document.createElement('span');
+        spark.style.position = 'absolute';
+        spark.style.left = (event.offsetX || target.clientWidth / 2) + 'px';
+        spark.style.top = (event.offsetY || target.clientHeight / 2) + 'px';
+        spark.style.width = '8px';
+        spark.style.height = '8px';
+        spark.style.borderRadius = '50%';
+        spark.style.background = 'rgba(37, 99, 235, 0.28)';
+        spark.style.transform = 'translate(-50%, -50%) scale(1)';
+        spark.style.pointerEvents = 'none';
+        spark.style.animation = 'sparkRipple 0.52s ease-out forwards';
+        target.appendChild(spark);
+        setTimeout(() => spark.remove(), 560);
+      });
 
       const HOURS = ['08:00 AM - 09:00 AM','09:00 AM - 10:00 AM','10:00 AM - 11:00 AM','11:00 AM - 12:00 PM','12:00 PM - 01:00 PM','01:00 PM - 02:00 PM','02:00 PM - 03:00 PM','03:00 PM - 04:00 PM','04:00 PM - 05:00 PM'];
       const DAYS = ['Monday','Tuesday','Wednesday','Thursday','Friday'];
@@ -611,9 +1213,9 @@
       }
       $('addDeadlineBtn').addEventListener('click', () => {
         const title = $('deadlineTitle').value.trim(); const date = $('deadlineDate').value;
-        if (!title || !date) return toast('Please add deadline title and date.');
+        if (!title || !date) return toast('Please add deadline title and date.', 'error');
         deadlines.push({ id: Date.now(), title, time: new Date(date).getTime(), starred: false });
-        saveJson(LS.deadlines, deadlines); $('deadlineTitle').value = ''; $('deadlineDate').value = ''; renderDeadlines(); renderPriorityList();
+        saveJson(LS.deadlines, deadlines); $('deadlineTitle').value = ''; $('deadlineDate').value = ''; renderDeadlines(); renderPriorityList(); toast('Deadline added.', 'success');
       });
       document.addEventListener('click', e => {
         const del = e.target.closest('[data-delete-deadline]');
@@ -737,6 +1339,79 @@
       let currentDept = 'AT';
       let generalData = null;
       let iatCurrent = null;
+      let iatOverallOpen = false;
+      function gradeClass(grade) {
+        const g = String(grade || '').trim().toUpperCase();
+        if (!g) return 'grade-empty';
+        if (g.startsWith('A')) return 'grade-a';
+        if (g.startsWith('B')) return 'grade-b';
+        if (g.startsWith('C')) return 'grade-c';
+        if (g.startsWith('D')) return 'grade-d';
+        if (g.startsWith('E')) return 'grade-e';
+        if (g.startsWith('F')) return 'grade-f';
+        return 'grade-empty';
+      }
+      function applyGradeColor(selectEl) {
+        if (!selectEl) return;
+        selectEl.classList.remove('grade-empty', 'grade-a', 'grade-b', 'grade-c', 'grade-d', 'grade-e', 'grade-f');
+        selectEl.classList.add('grade-select', gradeClass(selectEl.value));
+      }
+      function gpaResultClass(gpa) {
+        if (gpa === null || gpa === undefined || Number.isNaN(Number(gpa))) return 'gpa-neutral';
+        const value = Number(gpa);
+        if (value >= 3.7) return 'gpa-excellent';
+        if (value >= 3.0) return 'gpa-good';
+        if (value >= 2.0) return 'gpa-average';
+        return 'gpa-weak';
+      }
+      function updateGpaResultColor(elementId, gpa) {
+        const card = $(elementId);
+        if (!card) return;
+        card.classList.remove('gpa-neutral', 'gpa-excellent', 'gpa-good', 'gpa-average', 'gpa-weak', 'gpa-pop');
+        card.classList.add(gpaResultClass(gpa));
+
+        const numericGpa = Number(gpa);
+        const safeGpa = Number.isFinite(numericGpa) ? Math.max(0, Math.min(4, numericGpa)) : 0;
+        const ratio = safeGpa / 4;
+        const ringProgress = card.querySelector('[data-gpa-ring-progress]');
+        const ringLabel = card.querySelector('[data-gpa-ring-label]');
+        const circleLength = 213.63;
+        if (ringProgress) ringProgress.style.strokeDashoffset = String(circleLength - (circleLength * ratio));
+        if (ringLabel) ringLabel.textContent = (Number.isFinite(numericGpa) ? safeGpa.toFixed(1) : '0.0') + '/4';
+
+        void card.offsetWidth;
+        card.classList.add('gpa-pop');
+      }
+      function renderLatestGpaPreview(gpaValue = null, label = null, animate = false) {
+        const valueEl = $('homeGpaPreview');
+        const labelEl = $('homeGpaLabel');
+        const card = $('homeGpaCard') || (valueEl ? valueEl.closest('.preview-stat') : null);
+        if (!valueEl) return;
+
+        let record = loadJson(LS.latestGpa, null);
+        let numericGpa = Number(gpaValue);
+        if (!Number.isFinite(numericGpa)) numericGpa = record && Number.isFinite(Number(record.value)) ? Number(record.value) : 3.85;
+        numericGpa = Math.max(0, Math.min(4, numericGpa));
+
+        valueEl.textContent = numericGpa.toFixed(2);
+        if (labelEl) labelEl.textContent = label || (record && record.label) || 'Latest GPA';
+
+        if (card) {
+          card.classList.remove('gpa-neutral', 'gpa-excellent', 'gpa-good', 'gpa-average', 'gpa-weak', 'gpa-preview-pop');
+          card.classList.add(gpaResultClass(numericGpa));
+          if (animate) {
+            void card.offsetWidth;
+            card.classList.add('gpa-preview-pop');
+          }
+        }
+      }
+      function setLatestGpa(gpa, label = 'Latest GPA') {
+        const numericGpa = Number(gpa);
+        if (!Number.isFinite(numericGpa)) return;
+        const cleanGpa = Math.max(0, Math.min(4, numericGpa));
+        saveJson(LS.latestGpa, { value: cleanGpa, label, time: Date.now() });
+        renderLatestGpaPreview(cleanGpa, label, true);
+      }
       function defaultGeneral() { return { semesters: [{ id: Date.now(), name: 'Semester 1', courses: [{ id: Date.now()+1, name: '', grade: 'A', credits: 3 }] }] }; }
       function loadGeneral(dept) { return loadJson(LS.generalGpa + dept, defaultGeneral()); }
       function saveGeneral() { saveJson(LS.generalGpa + currentDept, generalData); }
@@ -745,66 +1420,132 @@
         generalData.semesters.forEach(s => s.courses.forEach(c => { const cr = Number(c.credits) || 0; credits += cr; points += cr * (GRADE_POINTS[c.grade] ?? 0); }));
         return credits ? points / credits : 0;
       }
-      function renderGeneralGpa() {
+      function updateGeneralSummary(updatePreview = false) {
+        const cumulativeGpa = calcGeneral();
         $('generalDeptLabel').textContent = currentDept;
-        $('generalGpaValue').textContent = calcGeneral().toFixed(2);
+        $('generalGpaValue').textContent = cumulativeGpa.toFixed(2);
+        updateGpaResultColor('generalGpaResult', cumulativeGpa);
+        if (updatePreview) setLatestGpa(cumulativeGpa, currentDept + ' GPA');
+      }
+      function renderGeneralGpa(updatePreview = false) {
+        updateGeneralSummary(updatePreview);
         $('gradeScaleGrid').innerHTML = Object.entries(GRADE_POINTS).map(([g,p]) => `<span>${g} = ${Number(p).toFixed(1)}</span>`).join('');
         $('generalSemesters').innerHTML = generalData.semesters.map((s, si) => `
           <div class="semester-card">
             <div class="semester-head"><input data-sem-name="${si}" value="${safeText(s.name)}"><button class="btn btn-danger btn-small" data-remove-sem="${si}">Remove</button></div>
             <div class="semester-body">
-              ${s.courses.map((c, ci) => `<div class="course-row"><input data-course-name="${si}:${ci}" value="${safeText(c.name)}" placeholder="Course name"><select data-course-grade="${si}:${ci}">${Object.keys(GRADE_POINTS).map(g => `<option ${g === c.grade ? 'selected' : ''}>${g}</option>`).join('')}</select><input type="number" step="0.5" min="0" data-course-credits="${si}:${ci}" value="${c.credits}"><button class="icon-action" data-remove-course="${si}:${ci}">✕</button></div>`).join('')}
+              ${s.courses.map((c, ci) => `<div class="course-row"><input data-course-name="${si}:${ci}" value="${safeText(c.name)}" placeholder="Course name"><select class="grade-select ${gradeClass(c.grade)}" data-course-grade="${si}:${ci}">${Object.keys(GRADE_POINTS).map(g => `<option ${g === c.grade ? 'selected' : ''}>${g}</option>`).join('')}</select><input type="number" step="0.5" min="0" data-course-credits="${si}:${ci}" value="${c.credits}"><button class="icon-action" data-remove-course="${si}:${ci}">✕</button></div>`).join('')}
               <button class="btn btn-secondary btn-small" data-add-course="${si}"><i class="fa-solid fa-plus"></i> Add Course</button>
             </div>
           </div>`).join('');
       }
-      function switchDept(dept) {
+      function focusGpaPanel(dept) {
+        const panel = dept === 'IAT' ? $('iatGpaPanel') : $('generalGpaPanel');
+        if (!panel) return;
+        requestAnimationFrame(() => {
+          const top = panel.getBoundingClientRect().top + window.scrollY - 96;
+          window.scrollTo({ top: Math.max(top, 0), behavior: 'smooth' });
+          panel.classList.remove('gpa-jump-highlight');
+          void panel.offsetWidth;
+          panel.classList.add('gpa-jump-highlight');
+          setTimeout(() => panel.classList.remove('gpa-jump-highlight'), 1300);
+        });
+      }
+      function switchDept(dept, shouldJump = false) {
         currentDept = dept;
         qsa('.department-btn').forEach(b => b.classList.toggle('active', b.dataset.dept === dept));
         $('generalGpaPanel').classList.toggle('hidden', dept === 'IAT');
         $('iatGpaPanel').classList.toggle('hidden', dept !== 'IAT');
-        if (dept !== 'IAT') { generalData = loadGeneral(dept); renderGeneralGpa(); } else { renderIatSaved(); }
+        if (dept !== 'IAT') {
+          generalData = loadGeneral(dept);
+          renderGeneralGpa(shouldJump);
+        } else {
+          renderIatSaved();
+        }
+        if (shouldJump) {
+          focusGpaPanel(dept);
+          showToast(dept + ' GPA calculator opened.');
+        }
       }
-      $('departmentButtons').addEventListener('click', e => { const btn = e.target.closest('[data-dept]'); if (btn) switchDept(btn.dataset.dept); });
-      $('addGeneralSemester').addEventListener('click', () => { generalData.semesters.push({ id: Date.now(), name: 'Semester ' + (generalData.semesters.length + 1), courses: [{ id: Date.now()+1, name:'', grade:'A', credits:3 }] }); saveGeneral(); renderGeneralGpa(); });
+      $('departmentButtons').addEventListener('click', e => {
+        const btn = e.target.closest('[data-dept]');
+        if (btn) switchDept(btn.dataset.dept, true);
+      });
+      $('addGeneralSemester').addEventListener('click', () => { generalData.semesters.push({ id: Date.now(), name: 'Semester ' + (generalData.semesters.length + 1), courses: [{ id: Date.now()+1, name:'', grade:'A', credits:3 }] }); saveGeneral(); renderGeneralGpa(true); });
       $('generalSemesters').addEventListener('input', e => {
         const v = e.target.value;
+        let shouldUpdateGpa = false;
         if (e.target.dataset.semName) generalData.semesters[e.target.dataset.semName].name = v;
         if (e.target.dataset.courseName) { const [s,c] = e.target.dataset.courseName.split(':').map(Number); generalData.semesters[s].courses[c].name = v; }
-        if (e.target.dataset.courseCredits) { const [s,c] = e.target.dataset.courseCredits.split(':').map(Number); generalData.semesters[s].courses[c].credits = v; }
-        saveGeneral(); renderGeneralGpa();
+        if (e.target.dataset.courseCredits) { const [s,c] = e.target.dataset.courseCredits.split(':').map(Number); generalData.semesters[s].courses[c].credits = v; shouldUpdateGpa = true; }
+        saveGeneral();
+        if (shouldUpdateGpa) updateGeneralSummary(true);
       });
-      $('generalSemesters').addEventListener('change', e => { if (e.target.dataset.courseGrade) { const [s,c] = e.target.dataset.courseGrade.split(':').map(Number); generalData.semesters[s].courses[c].grade = e.target.value; saveGeneral(); renderGeneralGpa(); } });
+      $('generalSemesters').addEventListener('change', e => { if (e.target.dataset.courseGrade) { applyGradeColor(e.target); const [s,c] = e.target.dataset.courseGrade.split(':').map(Number); generalData.semesters[s].courses[c].grade = e.target.value; saveGeneral(); updateGeneralSummary(true); } });
       $('generalSemesters').addEventListener('click', e => {
         const add = e.target.closest('[data-add-course]'); const rc = e.target.closest('[data-remove-course]'); const rs = e.target.closest('[data-remove-sem]');
         if (add) { const s = Number(add.dataset.addCourse); generalData.semesters[s].courses.push({ id: Date.now(), name:'', grade:'A', credits:3 }); }
         if (rc) { const [s,c] = rc.dataset.removeCourse.split(':').map(Number); generalData.semesters[s].courses.splice(c,1); }
         if (rs) { generalData.semesters.splice(Number(rs.dataset.removeSem),1); if (!generalData.semesters.length) generalData = defaultGeneral(); }
-        if (add || rc || rs) { saveGeneral(); renderGeneralGpa(); }
+        if (add || rc || rs) { saveGeneral(); renderGeneralGpa(true); }
       });
       function showIatMessage(msg, type='success') { const box = $('iatMessage'); box.textContent = msg; box.className = 'message show ' + type; setTimeout(() => box.className = 'message', 2500); }
       $('iatLevel').addEventListener('change', () => { const level = $('iatLevel').value; $('iatSemester').innerHTML = '<option value="">Select Semester</option>' + (level ? Object.keys(IAT_SUBJECT_DATA[level]).map(s => `<option>${s}</option>`).join('') : ''); $('iatSubjectBody').innerHTML = ''; });
       $('iatSemester').addEventListener('change', loadIatSubjects);
+      $('iatSubjectBody').addEventListener('change', e => {
+        if (e.target.dataset.iatGrade) {
+          applyGradeColor(e.target);
+          iatCurrent = null;
+          $('iatSemesterGpa').textContent = '0.00';
+          $('iatStatus').textContent = 'Recalculate required';
+          updateGpaResultColor('iatSemesterResult', null);
+        }
+      });
       function loadIatSubjects() {
         const level = $('iatLevel').value, sem = $('iatSemester').value;
+        iatCurrent = null;
+        $('iatSemesterGpa').textContent = '0.00';
+        $('iatStatus').textContent = 'Not calculated';
+        updateGpaResultColor('iatSemesterResult', null);
         if (!level || !sem) { $('iatSubjectBody').innerHTML = ''; return; }
-        $('iatSubjectBody').innerHTML = IAT_SUBJECT_DATA[level][sem].map((sub, i) => `<tr><td>${sub.code}</td><td>${sub.name}</td><td>${sub.credit}</td><td>${sub.credit === 'NG' ? '<span class="soft-text">Not counted</span>' : `<select data-iat-grade="${i}"><option value="">Select</option>${Object.keys(GRADE_POINTS).filter(g => g !== 'E').map(g => `<option>${g}</option>`).join('')}</select>`}</td></tr>`).join('');
+        const gradeOptions = Object.keys(GRADE_POINTS).filter(g => g !== 'E').map(g => `<option>${g}</option>`).join('');
+        $('iatSubjectBody').innerHTML = IAT_SUBJECT_DATA[level][sem].map((sub, i) => `
+          <tr>
+            <td>${sub.code}</td>
+            <td>${sub.name}</td>
+            <td>${sub.credit}</td>
+            <td>
+              <select class="grade-select grade-empty" data-iat-grade="${i}" ${sub.credit === 'NG' ? 'data-ng="true"' : ''}>
+                <option value="">Select</option>${gradeOptions}
+              </select>
+              ${sub.credit === 'NG' ? '<div class="soft-text ng-note">Not counted in GPA</div>' : ''}
+            </td>
+          </tr>`).join('');
       }
       function calcIat() {
         const level = $('iatLevel').value, sem = $('iatSemester').value;
         if (!level || !sem) return showIatMessage('Please select level and semester.', 'error');
-        let gradeEls = qsa('[data-iat-grade]'), idx = 0, points = 0, credits = 0, grades = [];
-        for (const sub of IAT_SUBJECT_DATA[level][sem]) {
-          if (sub.credit === 'NG') continue;
-          const grade = gradeEls[idx]?.value || ''; idx += 1;
-          if (!grade) return showIatMessage('Please select all grades.', 'error');
-          credits += Number(sub.credit); points += Number(sub.credit) * (GRADE_POINTS[grade] ?? 0); grades.push(grade);
-        }
+        const gradeEls = qsa('[data-iat-grade]');
+        let points = 0, credits = 0, grades = [], subjectGrades = [];
+        IAT_SUBJECT_DATA[level][sem].forEach((sub, i) => {
+          const grade = gradeEls[i]?.value || '';
+          subjectGrades.push({ code: sub.code, credit: sub.credit, grade, counted: sub.credit !== 'NG' });
+          if (sub.credit !== 'NG') {
+            if (!grade) return;
+            credits += Number(sub.credit);
+            points += Number(sub.credit) * (GRADE_POINTS[grade] ?? 0);
+            grades.push(grade);
+          }
+        });
+        const missingCountedGrade = IAT_SUBJECT_DATA[level][sem].some((sub, i) => sub.credit !== 'NG' && !gradeEls[i]?.value);
+        if (missingCountedGrade) return showIatMessage('Please select all GPA counted grades.', 'error');
         const gpa = credits ? points / credits : 0;
-        iatCurrent = { level, sem, credits, points, grades };
+        iatCurrent = { level, sem, credits, points, grades, subjectGrades };
         $('iatSemesterGpa').textContent = gpa.toFixed(2);
         $('iatStatus').textContent = gpa >= 3.7 ? 'Excellent' : gpa >= 3 ? 'Good' : gpa >= 2 ? 'Average' : 'Need Improvement';
-        showIatMessage('GPA calculated successfully.');
+        updateGpaResultColor('iatSemesterResult', gpa);
+        setLatestGpa(gpa, 'IAT Semester GPA');
+        showIatMessage('GPA calculated successfully. NG grades are saved but not counted.');
       }
       $('calculateIatGpa').addEventListener('click', calcIat);
       $('saveIatGpa').addEventListener('click', () => {
@@ -812,14 +1553,24 @@
         let saved = loadJson(LS.iat, []);
         const i = saved.findIndex(x => x.level === iatCurrent.level && x.sem === iatCurrent.sem);
         if (i >= 0) saved[i] = iatCurrent; else saved.push(iatCurrent);
-        saveJson(LS.iat, saved); renderIatSaved(); showIatMessage('Semester saved.');
+        saveJson(LS.iat, saved); renderIatSaved(); setLatestGpa(iatCurrent.points / iatCurrent.credits, 'IAT Saved GPA'); showIatMessage('Semester saved.');
       });
       function renderIatSaved() {
         const saved = loadJson(LS.iat, []); let credits = 0, points = 0;
         $('iatSavedBody').innerHTML = saved.map((r, i) => { credits += r.credits; points += r.points; return `<tr><td>${r.level}</td><td>${r.sem}</td><td>${r.credits}</td><td>${(r.points/r.credits).toFixed(2)}</td><td><button class="btn btn-danger btn-small" data-del-iat="${i}">Delete</button></td></tr>`; }).join('') || '<tr><td colspan="5" class="empty">No saved semesters</td></tr>';
+        const overallGpa = credits ? points / credits : null;
         $('iatOverallCredits').textContent = credits;
-        $('iatOverallGpa').textContent = credits ? (points/credits).toFixed(2) : '0.00';
+        $('iatOverallGpa').textContent = overallGpa === null ? '0.00' : overallGpa.toFixed(2);
+        updateGpaResultColor('iatOverallBox', overallGpa);
+        $('iatOverallBox').classList.toggle('hidden', !iatOverallOpen);
+        $('toggleIatOverall').innerHTML = iatOverallOpen
+          ? '<i class="fa-solid fa-eye-slash"></i> Hide Overall GPA (' + saved.length + ' Saved)'
+          : '<i class="fa-solid fa-eye"></i> View Overall GPA (' + saved.length + ' Saved)';
       }
+      $('toggleIatOverall').addEventListener('click', () => {
+        iatOverallOpen = !iatOverallOpen;
+        renderIatSaved();
+      });
       $('iatSavedBody').addEventListener('click', e => { const btn = e.target.closest('[data-del-iat]'); if (!btn) return; let saved = loadJson(LS.iat, []); saved.splice(Number(btn.dataset.delIat),1); saveJson(LS.iat,saved); renderIatSaved(); });
 
       let subjects = loadJson(LS.subjects, ['IT', 'Engineering', 'Management']);
@@ -842,14 +1593,14 @@
         $('resourceGrid').innerHTML = filtered.map(card).join('') || '<div class="empty-state">No resources found.</div>';
         renderResourceStats(filtered.length);
       }
-      $('addSubjectBtn').addEventListener('click', () => { const v = $('subjectInput').value.trim(); if (!v) return toast('Enter a subject name.'); if (!subjects.includes(v)) subjects.push(v); $('subjectInput').value=''; saveJson(LS.subjects, subjects); renderSubjects(); renderResources(); });
+      $('addSubjectBtn').addEventListener('click', () => { const v = $('subjectInput').value.trim(); if (!v) return toast('Enter a subject name.', 'error'); if (!subjects.includes(v)) subjects.push(v); $('subjectInput').value=''; saveJson(LS.subjects, subjects); renderSubjects(); renderResources(); toast('Subject added.', 'success'); });
       $('subjectList').addEventListener('click', e => { const btn = e.target.closest('[data-del-subject]'); if (!btn) return; subjects.splice(Number(btn.dataset.delSubject),1); saveJson(LS.subjects, subjects); renderSubjects(); renderResources(); });
       $('saveResourceBtn').addEventListener('click', () => {
         const title = $('resourceTitle').value.trim(), subject = $('resourceSubject').value;
-        if (!title || !subject) return toast('Fill title and subject.');
+        if (!title || !subject) return toast('Fill title and subject.', 'error');
         resources.unshift({ id: Date.now(), title, url: $('resourceUrl').value.trim(), subject, notes: $('resourceNotes').value.trim(), favorite: $('resourceFavorite').value === 'yes', date: new Date().toLocaleDateString() });
         ['resourceTitle','resourceUrl','resourceNotes'].forEach(id => $(id).value=''); $('resourceFavorite').value='no'; $('resourceSubject').value='';
-        saveJson(LS.resources, resources); renderResources();
+        saveJson(LS.resources, resources); renderResources(); toast('Resource saved.', 'success');
       });
       $('resourceSearch').addEventListener('input', renderResources); $('resourceFilter').addEventListener('change', renderResources);
       $('resourceGrid').addEventListener('click', e => { const btn = e.target.closest('[data-del-resource]'); if (!btn) return; resources = resources.filter(r => String(r.id) !== btn.dataset.delResource); saveJson(LS.resources, resources); renderResources(); });
@@ -869,8 +1620,8 @@
       function setTimerMode(mode) { clearInterval(timer.interval); timer.mode = mode; timer.running = false; timer.total = timerDuration(mode); timer.left = timer.total; $('focusMode').value = mode; updateTimerUi(); }
       function finishTimer() {
         clearInterval(timer.interval); timer.running = false;
-        if (timer.mode === 'focus') { focusState.sessions += 1; saveJson(LS.focus, focusState); renderTodos(); setTimerMode(focusState.sessions % 4 === 0 ? 'long' : 'short'); toast('Focus session complete. Take a break.'); }
-        else { setTimerMode('focus'); toast('Break complete. Back to focus.'); }
+        if (timer.mode === 'focus') { focusState.sessions += 1; saveJson(LS.focus, focusState); renderTodos(); setTimerMode(focusState.sessions % 4 === 0 ? 'long' : 'short'); toast('Focus session complete. Take a break.', 'success'); }
+        else { setTimerMode('focus'); toast('Break complete. Back to focus.', 'success'); }
       }
       $('startPauseTimer').addEventListener('click', () => {
         timer.running = !timer.running;
@@ -893,7 +1644,7 @@
         $('focusDoneTasks').textContent = focusState.tasks.filter(t => t.done).length;
         saveJson(LS.focus, focusState); renderResourceStats();
       }
-      $('addTodoBtn').addEventListener('click', () => { const text = $('todoInput').value.trim(); if (!text) return; focusState.tasks.unshift({ id: Date.now(), text, tag: $('todoTag').value, done:false }); $('todoInput').value=''; renderTodos(); });
+      $('addTodoBtn').addEventListener('click', () => { const text = $('todoInput').value.trim(); if (!text) return; focusState.tasks.unshift({ id: Date.now(), text, tag: $('todoTag').value, done:false }); $('todoInput').value=''; renderTodos(); toast('Task added.', 'success'); });
       $('todoList').addEventListener('click', e => {
         const tog = e.target.closest('[data-toggle-task]'); const del = e.target.closest('[data-delete-task]');
         if (tog) { const t = focusState.tasks.find(x => String(x.id) === tog.dataset.toggleTask); if (t) t.done = !t.done; }
@@ -901,10 +1652,11 @@
         if (tog || del) renderTodos();
       });
       $('clearCompletedBtn').addEventListener('click', () => { focusState.tasks = focusState.tasks.filter(t => !t.done); renderTodos(); });
-      $('saveNotesBtn').addEventListener('click', () => { localStorage.setItem(LS.notes, $('sessionNotes').value); toast('Notes saved.'); });
+      $('saveNotesBtn').addEventListener('click', () => { localStorage.setItem(LS.notes, $('sessionNotes').value); toast('Notes saved.', 'success'); });
       $('clearNotesBtn').addEventListener('click', () => { $('sessionNotes').value = ''; localStorage.removeItem(LS.notes); });
 
       $('focusMinutesInput').value = focusState.focusMins; $('shortMinutesInput').value = focusState.shortMins; $('longMinutesInput').value = focusState.longMins; $('sessionNotes').value = localStorage.getItem(LS.notes) || '';
+      renderLatestGpaPreview();
       generalData = loadGeneral(currentDept);
       switchDept('AT'); initTimetable(); renderDeadlines(); renderPriorityList(); renderSubjects(); renderTodos(); renderResources(); renderGeneralGpa(); updateClock(); setInterval(updateClock, 1000); setTimerMode('focus');
     })();
