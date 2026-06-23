@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UniHub | Student Productivity Portal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  <style>
+    :root {
+      --bg: #f5f8fc;
+      --bg-2: #eaf6ff;
+      --surface: #ffffff;
+      --surface-soft: #f1f7fb;
+      --text: #172033;
+      --muted: #64748b;
+      --line: #dbe8f1;
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --primary-soft: #dbeafe;
+      --mint: #10b981;
+      --mint-soft: #dffcf1;
+      --cyan: #22c7dd;
+      --orange: #f97316;
+      --orange-soft: #fff2e8;
+      --purple: #7c3aed;
+      --purple-soft: #f1e8ff;
+      --rose: #e11d48;
+      --rose-soft: #ffe7ee;
+      --yellow: #facc15;
+      --shadow: 0 20px 55px rgba(15, 23, 42, 0.10);
+      --shadow-sm: 0 10px 26px rgba(15, 23, 42, 0.08);
+      --radius-lg: 28px;
+      --radius: 20px;
+      --radius-sm: 14px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(37, 99, 235, 0.16), transparent 28rem),
+        radial-gradient(circle at bottom right, rgba(16, 185, 129, 0.12), transparent 28rem),
+        var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    a { color: inherit; text-decoration: none; }
+    button, input, select, textarea { font: inherit; }
+    button { cursor: pointer; }
+    .hidden { display: none !important; }
+    .container { width: min(1200px, calc(100% - 32px)); margin: 0 auto; }
+
+    .app-nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.86);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid rgba(219, 232, 241, 0.88);
+    }
+    .nav-inner {
+      min-height: 76px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+    .brand { display: flex; align-items: center; gap: 12px; font-weight: 900; letter-spacing: -0.04em; }
+    .brand-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 15px;
+      display: grid;
+      place-items: center;
+      color: #fff;
+      background: linear-gradient(135deg, var(--primary), var(--cyan));
+      box-shadow: 0 12px 24px rgba(37, 99, 235, 0.22);
+    }
+    .brand strong { color: var(--primary); font-size: 1.24rem; }
+    .brand span { display: block; color: var(--muted); font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; margin-top: 2px; }
+    .nav-links { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+    .nav-link {
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--muted);
+      padding: 10px 13px;
+      border-radius: 999px;
+      font-size: 0.86rem;
+      font-weight: 800;
+      transition: 0.22s ease;
+    }
+    .nav-link:hover, .nav-link.active { background: var(--primary-soft); color: var(--primary); border-color: rgba(37, 99, 235, 0.10); }
+    .mobile-menu-btn { display: none; border: none; background: var(--surface-soft); color: var(--text); border-radius: 14px; width: 44px; height: 44px; }
+
+    .page { display: none; animation: fadeUp 0.28s ease both; }
+    .page.active { display: block; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+    .hero { padding: 74px 0 54px; }
+    .hero-grid { display: grid; grid-template-columns: 1.04fr 0.96fr; gap: 34px; align-items: center; }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 13px;
+      border-radius: 999px;
+      background: var(--primary-soft);
+      color: var(--primary);
+      font-weight: 900;
+      font-size: 0.76rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 18px;
+    }
+    .hero h1 { font-size: clamp(2.5rem, 6vw, 5rem); line-height: 0.98; letter-spacing: -0.07em; margin-bottom: 18px; }
+    .hero h1 span { color: var(--primary); }
+    .hero p { color: var(--muted); max-width: 640px; line-height: 1.8; font-size: 1.04rem; }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 26px; }
+    .btn {
+      border: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 45px;
+      padding: 12px 18px;
+      border-radius: 999px;
+      font-weight: 900;
+      transition: 0.22s ease;
+    }
+    .btn:hover { transform: translateY(-2px); box-shadow: var(--shadow-sm); }
+    .btn-primary { background: linear-gradient(135deg, var(--primary), var(--cyan)); color: #fff; }
+    .btn-secondary { background: var(--surface); color: var(--text); border: 1px solid var(--line); }
+    .btn-danger { background: var(--rose); color: #fff; }
+    .btn-small { padding: 8px 12px; min-height: 36px; font-size: 0.78rem; }
+
+    .glass-card, .card {
+      background: rgba(255, 255, 255, 0.88);
+      border: 1px solid rgba(219, 232, 241, 0.95);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(18px);
+    }
+    .hero-preview { padding: 24px; position: relative; overflow: hidden; }
+    .hero-preview::after { content: ''; position: absolute; width: 220px; height: 220px; right: -100px; top: -100px; background: var(--primary-soft); border-radius: 50%; }
+    .preview-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; position: relative; z-index: 1; }
+    .pill { display: inline-flex; align-items: center; gap: 7px; padding: 7px 11px; border-radius: 999px; background: var(--surface-soft); color: var(--muted); font-size: 0.78rem; font-weight: 900; border: 1px solid var(--line); }
+    .mini-progress { display: grid; gap: 16px; margin: 26px 0; position: relative; z-index: 1; }
+    .bar-line { display: grid; gap: 7px; }
+    .bar-label { display: flex; justify-content: space-between; color: var(--muted); font-weight: 800; font-size: 0.8rem; }
+    .bar-track { height: 10px; background: var(--surface-soft); border-radius: 999px; overflow: hidden; border: 1px solid var(--line); }
+    .bar-fill { height: 100%; border-radius: 999px; background: linear-gradient(90deg, var(--primary), var(--mint)); }
+    .preview-stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; position: relative; z-index: 1; }
+    .preview-stat { padding: 16px; border-radius: var(--radius-sm); background: var(--surface-soft); border: 1px solid var(--line); }
+    .preview-stat strong { display: block; color: var(--primary); font-size: 1.8rem; letter-spacing: -0.04em; }
+    .preview-stat span { color: var(--muted); font-weight: 800; font-size: 0.76rem; }
+
+    .section { padding: 54px 0; }
+    .section-top { text-align: center; max-width: 760px; margin: 0 auto 26px; }
+    .section-top h2 { font-size: clamp(1.7rem, 4vw, 3rem); letter-spacing: -0.05em; margin-bottom: 10px; }
+    .section-top p { color: var(--muted); line-height: 1.75; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+    .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
+    .feature-card { padding: 24px; transition: 0.22s ease; }
+    .feature-card:hover { transform: translateY(-6px); }
+    .feature-icon { width: 52px; height: 52px; border-radius: 17px; display: grid; place-items: center; margin-bottom: 15px; background: var(--primary-soft); color: var(--primary); font-size: 1.25rem; }
+    .feature-card h3 { margin-bottom: 8px; font-size: 1rem; }
+    .feature-card p { color: var(--muted); line-height: 1.65; font-size: 0.92rem; }
+
+    .tool-page { padding: 36px 0 70px; }
+    .page-title { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; flex-wrap: wrap; margin-bottom: 20px; }
+    .page-title h2 { font-size: clamp(1.8rem, 4vw, 3rem); letter-spacing: -0.05em; }
+    .page-title p { color: var(--muted); line-height: 1.6; max-width: 680px; }
+    .panel { padding: 22px; }
+    .panel h3 { margin-bottom: 12px; }
+    .soft-text { color: var(--muted); line-height: 1.65; }
+    .dashboard-layout { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 18px; align-items: start; }
+    .clock-box { padding: 24px; }
+    .clock-time { color: var(--primary); font-size: clamp(2.3rem, 6vw, 4rem); font-weight: 900; line-height: 1; letter-spacing: -0.07em; font-variant-numeric: tabular-nums; }
+    .clock-date { margin-top: 8px; color: var(--muted); font-weight: 800; }
+    .stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 18px; }
+    .stat-box { padding: 18px; border-radius: var(--radius); background: var(--surface); border: 1px solid var(--line); box-shadow: var(--shadow-sm); }
+    .stat-box strong { display: block; color: var(--primary); font-size: 1.8rem; letter-spacing: -0.05em; }
+    .stat-box span { color: var(--muted); font-size: 0.78rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.06em; }
+
+    .form-row { display: grid; grid-template-columns: 1fr 1fr auto; gap: 10px; margin-bottom: 14px; }
+    .field { display: grid; gap: 6px; margin-bottom: 12px; }
+    label { color: var(--muted); font-size: 0.74rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.07em; }
+    input, select, textarea { width: 100%; border: 1px solid var(--line); border-radius: 14px; padding: 11px 12px; background: #fff; color: var(--text); outline: none; }
+    input:focus, select:focus, textarea:focus { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12); }
+    textarea { min-height: 110px; resize: vertical; }
+    .item-list { display: grid; gap: 10px; }
+    .list-item { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 13px; border-radius: 16px; background: var(--surface-soft); border: 1px solid var(--line); }
+    .list-item strong { display: block; }
+    .list-item small { color: var(--muted); }
+    .icon-action { border: none; border-radius: 12px; width: 38px; height: 38px; display: grid; place-items: center; background: #fff; color: var(--muted); }
+    .icon-action:hover { color: var(--primary); }
+    .matrix-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { border-bottom: 1px solid var(--line); padding: 12px; text-align: left; font-size: 0.88rem; }
+    th { color: var(--muted); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.07em; background: var(--surface-soft); }
+    td.empty { color: #a3aebd; font-style: italic; }
+
+    .shortcut-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+    .shortcut { padding: 24px; border-radius: var(--radius-lg); background: var(--surface); border: 1px solid var(--line); transition: 0.22s ease; }
+    .shortcut:hover { transform: translateY(-5px); box-shadow: var(--shadow); }
+    .shortcut .feature-icon { margin-bottom: 12px; }
+    .shortcut p { color: var(--muted); line-height: 1.6; margin: 8px 0 16px; }
+
+    .gpa-shell { display: grid; grid-template-columns: 320px 1fr; gap: 18px; align-items: start; }
+    .department-buttons { display: grid; gap: 10px; }
+    .department-btn { border: 1px solid var(--line); background: var(--surface); color: var(--text); border-radius: 16px; padding: 14px; text-align: left; font-weight: 900; transition: 0.22s ease; }
+    .department-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+    .gpa-result { padding: 22px; border-radius: var(--radius); background: linear-gradient(135deg, var(--primary), var(--cyan)); color: #fff; display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 14px; }
+    .gpa-result strong { font-size: 2.6rem; letter-spacing: -0.06em; }
+    .semester-card { border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); overflow: hidden; margin-bottom: 14px; }
+    .semester-head { display: flex; justify-content: space-between; gap: 12px; align-items: center; padding: 14px; background: var(--primary-soft); }
+    .semester-body { padding: 14px; }
+    .course-row { display: grid; grid-template-columns: 1fr 110px 90px 42px; gap: 9px; margin-bottom: 9px; }
+    .scale-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; margin-top: 12px; color: var(--muted); font-size: 0.78rem; }
+    .message { display: none; padding: 12px 14px; border-radius: 14px; margin-bottom: 12px; font-weight: 800; }
+    .message.show { display: block; }
+    .message.success { background: var(--mint-soft); color: #047857; }
+    .message.error { background: var(--rose-soft); color: #be123c; }
+
+    .resource-layout { display: grid; grid-template-columns: 330px 1fr; gap: 18px; align-items: start; }
+    .resource-controls { display: grid; grid-template-columns: 1fr 220px; gap: 10px; margin-bottom: 14px; }
+    .resource-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(245px, 1fr)); gap: 14px; }
+    .resource-card { padding: 18px; border-radius: var(--radius); background: var(--surface); border: 1px solid var(--line); box-shadow: var(--shadow-sm); }
+    .resource-card h4 { margin-bottom: 8px; }
+    .resource-card p { color: var(--muted); line-height: 1.55; font-size: 0.88rem; margin-bottom: 8px; }
+    .tagline { display: inline-flex; align-items: center; gap: 6px; border-radius: 999px; padding: 5px 9px; background: var(--primary-soft); color: var(--primary); font-size: 0.72rem; font-weight: 900; margin-bottom: 10px; }
+    .subject-chip { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 10px; border-radius: 14px; background: var(--surface-soft); border: 1px solid var(--line); margin-bottom: 8px; }
+
+    .focus-layout { display: grid; grid-template-columns: 0.92fr 1.18fr 0.9fr; gap: 18px; align-items: start; }
+    .timer-ring { width: min(280px, 76vw); height: min(280px, 76vw); margin: 18px auto; border-radius: 50%; display: grid; place-items: center; background: conic-gradient(var(--primary) var(--timer-progress, 0%), var(--surface-soft) 0%); padding: 13px; }
+    .timer-inner { width: 100%; height: 100%; border-radius: 50%; display: grid; place-items: center; text-align: center; background: #fff; border: 1px solid var(--line); }
+    .timer-digits { font-size: clamp(2.5rem, 7vw, 4rem); font-weight: 900; color: var(--primary); letter-spacing: -0.08em; font-variant-numeric: tabular-nums; }
+    .timer-state { color: var(--muted); font-size: 0.78rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.08em; margin-top: 8px; }
+    .timer-controls { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+    .task-row { display: grid; grid-template-columns: 1fr 120px; gap: 10px; margin-bottom: 10px; }
+    .todo-item { display: flex; align-items: center; gap: 10px; padding: 11px; border: 1px solid var(--line); border-radius: 15px; background: var(--surface-soft); }
+    .todo-item.done .todo-text { text-decoration: line-through; color: #94a3b8; }
+    .check-btn { width: 26px; height: 26px; border: 1px solid var(--line); border-radius: 9px; background: #fff; color: #fff; }
+    .check-btn.done { background: var(--mint); border-color: var(--mint); }
+    .todo-text { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+    .focus-stat { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 14px; }
+    .empty-state { padding: 28px; text-align: center; border-radius: var(--radius); background: var(--surface-soft); color: var(--muted); border: 1px dashed var(--line); }
+
+    .footer { padding: 26px 0; color: var(--muted); text-align: center; border-top: 1px solid var(--line); background: rgba(255,255,255,0.56); }
+
+    @media (max-width: 980px) {
+      .hero-grid, .dashboard-layout, .gpa-shell, .resource-layout, .focus-layout { grid-template-columns: 1fr; }
+      .grid-3, .shortcut-grid { grid-template-columns: repeat(2, 1fr); }
+      .stat-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 720px) {
+      .nav-inner { min-height: 68px; }
+      .mobile-menu-btn { display: grid; place-items: center; }
+      .nav-links {
+        display: none;
+        position: absolute;
+        left: 16px;
+        right: 16px;
+        top: 72px;
+        padding: 12px;
+        border-radius: 22px;
+        background: #fff;
+        box-shadow: var(--shadow);
+        border: 1px solid var(--line);
+        justify-content: flex-start;
+      }
+      .nav-links.open { display: flex; }
+      .grid-3, .grid-2, .shortcut-grid, .preview-stats, .resource-controls, .task-row { grid-template-columns: 1fr; }
+      .form-row { grid-template-columns: 1fr; }
+      .course-row { grid-template-columns: 1fr 1fr; }
+      .scale-grid { grid-template-columns: repeat(3, 1fr); }
+      .hero { padding-top: 44px; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="app-nav">
+    <div class="container nav-inner">
+      <a class="brand" href="#home" data-page-link="home">
+        <span class="brand-icon"><i class="fa-solid fa-graduation-cap"></i></span>
+        <span><strong>UniHub</strong><span>Student Productivity Portal</span></span>
+      </a>
+      <button class="mobile-menu-btn" id="menuToggle" aria-label="Open menu"><i class="fa-solid fa-bars"></i></button>
+      <div class="nav-links" id="navLinks">
+        <button class="nav-link active" data-page-link="home">Home</button>
+        <button class="nav-link" data-page-link="dashboard">Dashboard</button>
+        <button class="nav-link" data-page-link="gpa">GPA</button>
+        <button class="nav-link" data-page-link="resources">Resources</button>
+        <button class="nav-link" data-page-link="focus">Focus</button>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <section class="page active" id="page-home">
+      <div class="container hero">
+        <div class="hero-grid">
+          <div>
+            <span class="eyebrow"><i class="fa-solid fa-bolt"></i> All-in-one academic suite</span>
+            <h1>Focus on <span>what matters</span> in your uni life.</h1>
+            <p>UniHub keeps your dashboard, deadlines, timetable, GPA calculator, resources and focus timer inside one clean interface. No file linking headache. Open this HTML file and everything is ready.</p>
+            <div class="hero-actions">
+              <button class="btn btn-primary" data-page-link="dashboard"><i class="fa-solid fa-gauge-high"></i> Enter Dashboard</button>
+              <button class="btn btn-secondary" data-page-link="gpa"><i class="fa-solid fa-calculator"></i> GPA Calculator</button>
+            </div>
+          </div>
+          <div class="hero-preview glass-card">
+            <div class="preview-head">
+              <h3>Student Overview</h3>
+              <span class="pill"><i class="fa-solid fa-calendar-week"></i> Week Plan</span>
+            </div>
+            <div class="mini-progress">
+              <div class="bar-line"><div class="bar-label"><span>Lecture Tracking</span><span>88%</span></div><div class="bar-track"><div class="bar-fill" style="width:88%"></div></div></div>
+              <div class="bar-line"><div class="bar-label"><span>Assignment Progress</span><span>72%</span></div><div class="bar-track"><div class="bar-fill" style="width:72%"></div></div></div>
+              <div class="bar-line"><div class="bar-label"><span>Focus Sessions</span><span>64%</span></div><div class="bar-track"><div class="bar-fill" style="width:64%"></div></div></div>
+            </div>
+            <div class="preview-stats">
+              <div class="preview-stat"><strong id="homeGpaPreview">3.85</strong><span>Sample GPA</span></div>
+              <div class="preview-stat"><strong id="homeTaskPreview">0</strong><span>Saved Tasks</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="container section">
+        <div class="section-top">
+          <span class="eyebrow">Pages</span>
+          <h2>Five pages, one HTML file</h2>
+          <p>These are connected with internal navigation. You do not need to create separate CSS or JS files.</p>
+        </div>
+        <div class="grid-3">
+          <div class="feature-card card"><div class="feature-icon"><i class="fa-solid fa-house"></i></div><h3>Smart Landing Page</h3><p>Modern entry page with clear project introduction and smooth page flow.</p></div>
+          <div class="feature-card card"><div class="feature-icon"><i class="fa-solid fa-chart-line"></i></div><h3>Study Dashboard</h3><p>Live clock, timetable, priority tasks and upcoming deadlines saved in your browser.</p></div>
+          <div class="feature-card card"><div class="feature-icon"><i class="fa-solid fa-calculator"></i></div><h3>GPA Calculator</h3><p>Department route for IAT, AT, ET and ICT with grade calculation support.</p></div>
+          <div class="feature-card card"><div class="feature-icon"><i class="fa-solid fa-book-open"></i></div><h3>Resource Library</h3><p>Add subjects, save links, filter resources and mark favourites.</p></div>
+          <div class="feature-card card"><div class="feature-icon"><i class="fa-solid fa-stopwatch"></i></div><h3>Focus Timer</h3><p>Pomodoro timer and task manager with localStorage saving.</p></div>
+          <div class="feature-card card"><div class="feature-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></div><h3>UI/UX Polish</h3><p>Soft blue, mint and white theme with clean cards and hover effects.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="page" id="page-dashboard">
+      <div class="container tool-page">
+        <div class="page-title">
+          <div><span class="eyebrow">Central Hub</span><h2>Study Dashboard</h2><p>Daily overview, live clock, timetable manager and upcoming deadlines.</p></div>
+        </div>
+        <div class="stat-grid">
+          <div class="stat-box"><strong id="dashDeadlineCount">0</strong><span>Deadlines</span></div>
+          <div class="stat-box"><strong id="dashPriorityCount">0</strong><span>Priority</span></div>
+          <div class="stat-box"><strong id="dashTodayCount">0</strong><span>Today</span></div>
+          <div class="stat-box"><strong id="dashResourceCount">0</strong><span>Resources</span></div>
+        </div>
+        <div class="dashboard-layout">
+          <div class="panel card clock-box">
+            <span class="eyebrow"><i class="fa-regular fa-clock"></i> Live Clock</span>
+            <div class="clock-time" id="dashClock">00:00:00</div>
+            <div class="clock-date" id="dashDate">Today</div>
+          </div>
+          <div class="panel card">
+            <h3>Priority Tasks</h3>
+            <p class="soft-text" style="margin-bottom:12px;">Star deadlines or add timetable items for today. They appear here automatically.</p>
+            <div id="priorityList" class="item-list"></div>
+          </div>
+        </div>
+
+        <div class="grid-2" style="margin-top:18px;">
+          <div class="panel card">
+            <h3>Upcoming Deadlines</h3>
+            <div class="form-row">
+              <input id="deadlineTitle" placeholder="Task or assignment name">
+              <input id="deadlineDate" type="datetime-local">
+              <button class="btn btn-primary btn-small" id="addDeadlineBtn">Add</button>
+            </div>
+            <div id="deadlinesList" class="item-list"></div>
+          </div>
+          <div class="panel card">
+            <h3>Quick Shortcuts</h3>
+            <div class="shortcut-grid" style="grid-template-columns:1fr;">
+              <button class="shortcut" data-page-link="gpa"><div class="feature-icon"><i class="fa-solid fa-calculator"></i></div><h3>Open GPA Calculator</h3><p>Calculate semester results.</p></button>
+              <button class="shortcut" data-page-link="resources"><div class="feature-icon"><i class="fa-solid fa-book"></i></div><h3>Open Resource Library</h3><p>Manage notes and links.</p></button>
+              <button class="shortcut" data-page-link="focus"><div class="feature-icon"><i class="fa-solid fa-stopwatch"></i></div><h3>Open Focus Tools</h3><p>Timer and task manager.</p></button>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel card" style="margin-top:18px;">
+          <h3>Weekly Timetable</h3>
+          <p class="soft-text" style="margin-bottom:12px;">Use the manager below to save lectures or study sessions.</p>
+          <div class="matrix-wrap"><table><thead><tr><th>Time</th><th>Monday</th><th>Tuesday</th><th>Wednesday</th><th>Thursday</th><th>Friday</th></tr></thead><tbody id="timetableBody"></tbody></table></div>
+        </div>
+
+        <div class="panel card" style="margin-top:18px;">
+          <h3>Timetable Manager</h3>
+          <div class="grid-2">
+            <div class="field"><label>Day</label><select id="daySelector"></select></div>
+            <div class="field"><label>Auto Save</label><input value="Type in the boxes below" disabled></div>
+          </div>
+          <div id="timetableEditor" class="item-list"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="page" id="page-gpa">
+      <div class="container tool-page">
+        <div class="page-title"><div><span class="eyebrow">Academic Tool</span><h2>GPA Calculator</h2><p>Select your department first. IAT opens the subject-based calculator. AT, ET and ICT open a general GPA calculator.</p></div></div>
+        <div class="gpa-shell">
+          <aside class="panel card">
+            <h3>Select Department</h3>
+            <p class="soft-text" style="margin-bottom:14px;">Route rule: IAT uses fixed subjects. Other departments use custom semesters.</p>
+            <div class="department-buttons" id="departmentButtons">
+              <button class="department-btn active" data-dept="AT">AT General Calculator</button>
+              <button class="department-btn" data-dept="ET">ET General Calculator</button>
+              <button class="department-btn" data-dept="ICT">ICT General Calculator</button>
+              <button class="department-btn" data-dept="IAT">IAT Subject Calculator</button>
+            </div>
+          </aside>
+          <section class="panel card" id="generalGpaPanel">
+            <div class="gpa-result"><div><span>Department</span><h3 id="generalDeptLabel">AT</h3></div><div><span>Cumulative GPA</span><strong id="generalGpaValue">0.00</strong></div></div>
+            <div id="generalSemesters"></div>
+            <button class="btn btn-primary" id="addGeneralSemester"><i class="fa-solid fa-plus"></i> Add Semester</button>
+            <div class="scale-grid" id="gradeScaleGrid"></div>
+          </section>
+
+          <section class="panel card hidden" id="iatGpaPanel">
+            <h3>IAT GPA Calculator</h3>
+            <div id="iatMessage" class="message"></div>
+            <div class="grid-2">
+              <div class="field"><label>Level</label><select id="iatLevel"><option value="">Select Level</option><option>Level I</option><option>Level II</option><option>Level III</option><option>Level IV</option></select></div>
+              <div class="field"><label>Semester</label><select id="iatSemester"><option value="">Select Semester</option></select></div>
+            </div>
+            <div class="matrix-wrap" style="margin:12px 0;"><table><thead><tr><th>Code</th><th>Course</th><th>Credits</th><th>Grade</th></tr></thead><tbody id="iatSubjectBody"></tbody></table></div>
+            <button class="btn btn-primary" id="calculateIatGpa"><i class="fa-solid fa-calculator"></i> Calculate GPA</button>
+            <button class="btn btn-secondary" id="saveIatGpa"><i class="fa-solid fa-floppy-disk"></i> Save Semester</button>
+            <div class="gpa-result" style="margin-top:14px;"><div><span>Semester GPA</span><strong id="iatSemesterGpa">0.00</strong></div><div><span>Status</span><h3 id="iatStatus">Not calculated</h3></div></div>
+            <div class="panel" style="padding:0;margin-top:16px;">
+              <h3>Saved IAT Semesters</h3>
+              <div class="matrix-wrap"><table><thead><tr><th>Level</th><th>Semester</th><th>Credits</th><th>GPA</th><th>Action</th></tr></thead><tbody id="iatSavedBody"></tbody></table></div>
+              <div class="gpa-result" style="margin-top:14px;"><div><span>Overall GPA</span><strong id="iatOverallGpa">0.00</strong></div><div><span>Total Credits</span><h3 id="iatOverallCredits">0</h3></div></div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </section>
+
+    <section class="page" id="page-resources">
+      <div class="container tool-page">
+        <div class="page-title"><div><span class="eyebrow">Resource Hub</span><h2>Resource Library</h2><p>Save lecture notes, websites, YouTube links, GitHub repos and study notes. Search and filter instantly.</p></div></div>
+        <div class="stat-grid">
+          <div class="stat-box"><strong id="subjectCount">0</strong><span>Subjects</span></div>
+          <div class="stat-box"><strong id="resourceCount">0</strong><span>Resources</span></div>
+          <div class="stat-box"><strong id="favoriteCount">0</strong><span>Favorites</span></div>
+          <div class="stat-box"><strong id="filteredCount">0</strong><span>Showing</span></div>
+        </div>
+        <div class="resource-layout">
+          <aside class="panel card">
+            <h3>Add Subject</h3>
+            <div class="field"><label>Subject name</label><input id="subjectInput" placeholder="Example: Web Technology"></div>
+            <button class="btn btn-primary" id="addSubjectBtn" style="width:100%;"><i class="fa-solid fa-plus"></i> Add Subject</button>
+            <h3 style="margin-top:22px;">My Subjects</h3>
+            <div id="subjectList"></div>
+          </aside>
+          <section class="panel card">
+            <h3>Add Resource</h3>
+            <div class="grid-2">
+              <div class="field"><label>Title</label><input id="resourceTitle" placeholder="Resource title"></div>
+              <div class="field"><label>URL</label><input id="resourceUrl" placeholder="https://example.com"></div>
+            </div>
+            <div class="grid-2">
+              <div class="field"><label>Subject</label><select id="resourceSubject"><option value="">Select Subject</option></select></div>
+              <div class="field"><label>Favourite</label><select id="resourceFavorite"><option value="no">No</option><option value="yes">Yes</option></select></div>
+            </div>
+            <div class="field"><label>Notes</label><textarea id="resourceNotes" placeholder="Small note about this resource"></textarea></div>
+            <button class="btn btn-primary" id="saveResourceBtn"><i class="fa-solid fa-floppy-disk"></i> Save Resource</button>
+            <div class="resource-controls" style="margin-top:18px;">
+              <input id="resourceSearch" placeholder="Search resources">
+              <select id="resourceFilter"><option value="">All Subjects</option></select>
+            </div>
+            <div id="favoriteResources" class="resource-grid" style="margin-bottom:16px;"></div>
+            <div id="resourceGrid" class="resource-grid"></div>
+          </section>
+        </div>
+      </div>
+    </section>
+
+    <section class="page" id="page-focus">
+      <div class="container tool-page">
+        <div class="page-title"><div><span class="eyebrow">Productivity Tool</span><h2>Focus Timer & Task Manager</h2><p>Pomodoro timer, saved tasks, progress and session notes. Your task list is stored in the browser.</p></div></div>
+        <div class="focus-layout">
+          <aside class="panel card">
+            <h3>Timer Settings</h3>
+            <div class="field"><label>Focus minutes</label><input id="focusMinutesInput" type="number" min="1" max="120" value="25"></div>
+            <div class="field"><label>Short break</label><input id="shortMinutesInput" type="number" min="1" max="60" value="5"></div>
+            <div class="field"><label>Long break</label><input id="longMinutesInput" type="number" min="1" max="90" value="15"></div>
+            <button class="btn btn-primary" id="applyTimerBtn" style="width:100%;"><i class="fa-solid fa-floppy-disk"></i> Apply</button>
+            <div class="focus-stat">
+              <div class="stat-box"><strong id="focusSessions">0</strong><span>Sessions</span></div>
+              <div class="stat-box"><strong id="focusDoneTasks">0</strong><span>Done</span></div>
+            </div>
+          </aside>
+          <section class="panel card">
+            <h3>Pomodoro Timer</h3>
+            <div class="field"><label>Mode</label><select id="focusMode"><option value="focus">Focus</option><option value="short">Short Break</option><option value="long">Long Break</option></select></div>
+            <div class="timer-ring" id="timerRing"><div class="timer-inner"><div><div class="timer-digits" id="timerDigits">25:00</div><div class="timer-state" id="timerState">Ready</div></div></div></div>
+            <div class="timer-controls">
+              <button class="btn btn-primary" id="startPauseTimer"><i class="fa-solid fa-play"></i> Start</button>
+              <button class="btn btn-secondary" id="resetTimerBtn"><i class="fa-solid fa-rotate-left"></i> Reset</button>
+              <button class="btn btn-secondary" id="nextTimerBtn"><i class="fa-solid fa-forward-step"></i> Next</button>
+            </div>
+          </section>
+          <aside class="panel card">
+            <h3>Task Manager</h3>
+            <div class="task-row"><input id="todoInput" placeholder="Write a task"><select id="todoTag"><option>General</option><option>Lecture</option><option>Assignment</option><option>Revision</option></select></div>
+            <button class="btn btn-primary" id="addTodoBtn" style="width:100%;"><i class="fa-solid fa-plus"></i> Add Task</button>
+            <div id="todoList" class="item-list" style="margin-top:14px;"></div>
+            <button class="btn btn-secondary" id="clearCompletedBtn" style="width:100%;margin-top:12px;"><i class="fa-solid fa-broom"></i> Clear Completed</button>
+          </aside>
+        </div>
+        <div class="panel card" style="margin-top:18px;">
+          <h3>Session Notes</h3>
+          <textarea id="sessionNotes" placeholder="What did you study today?"></textarea>
+          <div class="hero-actions" style="margin-top:12px;"><button class="btn btn-primary" id="saveNotesBtn"><i class="fa-solid fa-floppy-disk"></i> Save Notes</button><button class="btn btn-secondary" id="clearNotesBtn"><i class="fa-solid fa-eraser"></i> Clear Notes</button></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">© 2026 UniHub · Built for university students · One HTML file version</div>
+  </footer>
+
+  <script>
+    (() => {
+      const $ = (id) => document.getElementById(id);
+      const qsa = (sel) => [...document.querySelectorAll(sel)];
+      const LS = {
+        deadlines: 'unihub_deadlines_v1', timetable: 'unihub_timetable_v1',
+        generalGpa: 'unihub_general_gpa_v1_', iat: 'unihub_iat_saved_v1',
+        subjects: 'unihub_subjects_v1', resources: 'unihub_resources_v1',
+        focus: 'unihub_focus_v1', notes: 'unihub_notes_v1'
+      };
+      function loadJson(key, fallback) { try { return JSON.parse(localStorage.getItem(key)) ?? fallback; } catch { return fallback; } }
+      function saveJson(key, data) { localStorage.setItem(key, JSON.stringify(data)); }
+      function safeText(str) { return String(str ?? '').replace(/[&<>"]/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[s])); }
+      function formatDate(ts) { return new Date(ts).toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' }); }
+      function toast(msg) { alert(msg); }
+
+      function showPage(page) {
+        qsa('.page').forEach(p => p.classList.remove('active'));
+        const target = $('page-' + page) || $('page-home');
+        target.classList.add('active');
+        qsa('[data-page-link]').forEach(btn => btn.classList.toggle('active', btn.dataset.pageLink === page));
+        if (location.hash !== '#' + page) history.replaceState(null, '', '#' + page);
+        $('navLinks').classList.remove('open');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+      qsa('[data-page-link]').forEach(el => el.addEventListener('click', () => showPage(el.dataset.pageLink)));
+      $('menuToggle').addEventListener('click', () => $('navLinks').classList.toggle('open'));
+      const initial = (location.hash || '#home').replace('#', '');
+      showPage(['home','dashboard','gpa','resources','focus'].includes(initial) ? initial : 'home');
+
+      const HOURS = ['08:00 AM - 09:00 AM','09:00 AM - 10:00 AM','10:00 AM - 11:00 AM','11:00 AM - 12:00 PM','12:00 PM - 01:00 PM','01:00 PM - 02:00 PM','02:00 PM - 03:00 PM','03:00 PM - 04:00 PM','04:00 PM - 05:00 PM'];
+      const DAYS = ['Monday','Tuesday','Wednesday','Thursday','Friday'];
+      let deadlines = loadJson(LS.deadlines, []);
+      let timetable = loadJson(LS.timetable, {});
+
+      function updateClock() {
+        const now = new Date();
+        $('dashClock').textContent = now.toLocaleTimeString();
+        $('dashDate').textContent = now.toLocaleDateString([], { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+        renderDeadlines(false);
+        renderPriorityList();
+      }
+      function renderDashboardStats() {
+        const today = new Date().toLocaleDateString('en-US', { weekday: 'long' });
+        $('dashDeadlineCount').textContent = deadlines.length;
+        $('dashPriorityCount').textContent = deadlines.filter(d => d.starred).length;
+        $('dashTodayCount').textContent = HOURS.filter(h => (timetable[today + '_' + h] || '').trim()).length;
+        $('dashResourceCount').textContent = resources.length;
+      }
+      function renderDeadlines(alsoStats = true) {
+        const box = $('deadlinesList');
+        deadlines.sort((a,b) => a.time - b.time);
+        if (!deadlines.length) { box.innerHTML = '<div class="empty-state">No deadlines yet. Add your first one above.</div>'; }
+        else {
+          box.innerHTML = deadlines.map(d => {
+            const diff = d.time - Date.now();
+            const left = diff <= 0 ? 'Expired' : Math.floor(diff / 86400000) + 'd ' + Math.floor((diff % 86400000) / 3600000) + 'h left';
+            return `<div class="list-item"><button class="icon-action" data-star-deadline="${d.id}">${d.starred ? '★' : '☆'}</button><div style="flex:1"><strong>${safeText(d.title)}</strong><small>${formatDate(d.time)} · ${left}</small></div><button class="btn btn-danger btn-small" data-delete-deadline="${d.id}">Delete</button></div>`;
+          }).join('');
+        }
+        if (alsoStats) renderDashboardStats();
+      }
+      function renderPriorityList() {
+        const today = new Date().toLocaleDateString('en-US', { weekday: 'long' });
+        const items = [];
+        deadlines.filter(d => d.starred).forEach(d => items.push(`<div class="list-item"><span class="pill"><i class="fa-solid fa-star"></i> Priority</span><div><strong>${safeText(d.title)}</strong><small>${formatDate(d.time)}</small></div></div>`));
+        HOURS.forEach(h => { const v = (timetable[today + '_' + h] || '').trim(); if (v) items.push(`<div class="list-item"><span class="pill">${h.split(' - ')[0]}</span><div><strong>${safeText(v)}</strong><small>Today</small></div></div>`); });
+        $('priorityList').innerHTML = items.join('') || '<div class="empty-state">No priority tasks for today.</div>';
+        renderDashboardStats();
+      }
+      $('addDeadlineBtn').addEventListener('click', () => {
+        const title = $('deadlineTitle').value.trim(); const date = $('deadlineDate').value;
+        if (!title || !date) return toast('Please add deadline title and date.');
+        deadlines.push({ id: Date.now(), title, time: new Date(date).getTime(), starred: false });
+        saveJson(LS.deadlines, deadlines); $('deadlineTitle').value = ''; $('deadlineDate').value = ''; renderDeadlines(); renderPriorityList();
+      });
+      document.addEventListener('click', e => {
+        const del = e.target.closest('[data-delete-deadline]');
+        const star = e.target.closest('[data-star-deadline]');
+        if (del) { deadlines = deadlines.filter(d => String(d.id) !== del.dataset.deleteDeadline); saveJson(LS.deadlines, deadlines); renderDeadlines(); renderPriorityList(); }
+        if (star) { const d = deadlines.find(x => String(x.id) === star.dataset.starDeadline); if (d) d.starred = !d.starred; saveJson(LS.deadlines, deadlines); renderDeadlines(); renderPriorityList(); }
+      });
+      function initTimetable() {
+        $('daySelector').innerHTML = DAYS.map(d => `<option>${d}</option>`).join('');
+        $('daySelector').addEventListener('change', renderTimetableEditor);
+        renderTimetableTable(); renderTimetableEditor();
+      }
+      function renderTimetableTable() {
+        $('timetableBody').innerHTML = HOURS.map(h => `<tr><td><strong>${h}</strong></td>${DAYS.map(d => { const v = (timetable[d + '_' + h] || '').trim(); return `<td class="${v ? '' : 'empty'}">${v ? safeText(v) : '—'}</td>`; }).join('')}</tr>`).join('');
+      }
+      function renderTimetableEditor() {
+        const day = $('daySelector').value || 'Monday';
+        $('timetableEditor').innerHTML = HOURS.map(h => `<div class="list-item"><strong style="min-width:150px">${h}</strong><input data-time-slot="${h}" value="${safeText(timetable[day + '_' + h] || '')}" placeholder="Add lecture or study task"></div>`).join('');
+      }
+      $('timetableEditor').addEventListener('input', e => {
+        if (!e.target.dataset.timeSlot) return;
+        timetable[($('daySelector').value || 'Monday') + '_' + e.target.dataset.timeSlot] = e.target.value;
+        saveJson(LS.timetable, timetable); renderTimetableTable(); renderPriorityList();
+      });
+
+      const GRADE_POINTS = {'A+':4,'A':4,'A-':3.7,'B+':3.3,'B':3,'B-':2.7,'C+':2.3,'C':2,'C-':1.7,'D+':1.3,'D':1,'E':0,'F':0};
+      const IAT_SUBJECT_DATA = {
+      "Level I": {
+        "Semester 1": [
+          { code: "EN 1101", name: "Integrated English Language Skills for Technology (I)", credit: "NG" },
+          { code: "FT 1101", name: "Workshop Practice", credit: 1 },
+          { code: "FT 1201", name: "Basic Mathematics", credit: 2 },
+          { code: "FT 1202", name: "Biology", credit: 2 },
+          { code: "FT 1203", name: "Chemistry", credit: 2 },
+          { code: "FT 1301", name: "Physics", credit: 3 },
+          { code: "IA 1201", name: "Pre-Calculus and Coordinate Geometry", credit: 2 },
+          { code: "IA 1202", name: "Electricity and Magnetism", credit: 2 },
+          { code: "IA 1203", name: "Communication Skills for Engineering Technologists", credit: 2 }
+        ],
+        "Semester 2": [
+          { code: "EN 1102", name: "Integrated English Language Skills for Technology (II)", credit: "NG" },
+          { code: "FT 1102", name: "Technology and Historical Transformation", credit: 1 },
+          { code: "FT 1204", name: "Computer Applications", credit: 2 },
+          { code: "IA 1204", name: "Vectors and Matrices", credit: 2 },
+          { code: "IA 1205", name: "Introduction to Calculus", credit: 2 },
+          { code: "IA 1206", name: "Introduction to Computer Programming", credit: 2 },
+          { code: "IA 1207", name: "Computer Architecture I", credit: 2 },
+          { code: "IA 1208", name: "Engineering Mechanics", credit: 2 },
+          { code: "IA 1209", name: "Design Project", credit: "NG" },
+          { code: "IA 1301", name: "Analog and Digital Electronics I", credit: 3 }
+        ]
+      },
+      "Level II": {
+        "Semester 1": [
+          { code: "EN 2101", name: "Primary English Communication Skills for Technology (I)", credit: "NG" },
+          { code: "FT 2201", name: "Management of Technology", credit: 2 },
+          { code: "IA 2101", name: "Technical Drawing and CAD", credit: 1 },
+          { code: "IA 2102", name: "Introduction to Engineering Materials Technology", credit: 1 },
+          { code: "IA 2201", name: "Ordinary Differential Equations", credit: 2 },
+          { code: "IA 2202", name: "Probability and Statistics", credit: 2 },
+          { code: "IA 2203", name: "Computer Architecture II", credit: 2 },
+          { code: "IA 2204", name: "Industrial Management and Marketing", credit: 2 },
+          { code: "IA 2301", name: "Analog and Digital Electronics II", credit: 3 }
+        ],
+        "Semester 2": [
+          { code: "EN 2102", name: "English Communication Skills for Technology (II)", credit: "NG" },
+          { code: "IA 2103", name: "Workshop Practice - Welding Techniques", credit: 1 },
+          { code: "IA 2104", name: "Internet Programming", credit: 1 },
+          { code: "IA 2205", name: "Statistical Data Analysis", credit: 2 },
+          { code: "IA 2206", name: "Electromagnetic Fields", credit: 2 },
+          { code: "IA 2207", name: "Waves and Vibrations & AC Theory", credit: 2 },
+          { code: "IA 2208", name: "Electronic Circuit Simulations and Analysis", credit: 2 },
+          { code: "IA 2209", name: "Microcontroller Laboratory", credit: 2 },
+          { code: "IA 2210", name: "Rapid Application Development", credit: 2 },
+          { code: "IA 2211", name: "Mobile Application Development", credit: 2 }
+        ]
+      },
+      "Level III": {
+        "Semester 1": [
+          { code: "EN 3101", name: "Advanced Communication Skills in English for Technology (I)", credit: "NG" },
+          { code: "IA 3101", name: "Introduction to Field Programmable Gate Arrays", credit: 1 },
+          { code: "IA 3201", name: "Applied Numerical Methods", credit: 2 },
+          { code: "IA 3202", name: "Sensors and Transducers", credit: 2 },
+          { code: "IA 3203", name: "Digital Signal Processing", credit: 2 },
+          { code: "IA 3204", name: "Data Acquisition Systems", credit: 2 },
+          { code: "IA 3205", name: "Introduction to Robotics", credit: 2 },
+          { code: "IA 3206", name: "Non-conventional Energy Sources & their Applications", credit: 2 },
+          { code: "IA 3207", name: "Data Communication and Networking", credit: 2 },
+          { code: "IA 3208", name: "Computer Programming (Mini Project)", credit: 2 }
+        ],
+        "Semester 2": [
+          { code: "FT 3101", name: "Development Economics", credit: 1 },
+          { code: "FT 3201", name: "Environmental Law", credit: 2 },
+          { code: "FT 3202", name: "Occupational Health and Safety", credit: 2 },
+          { code: "FT 3203", name: "Sociology and Values for a Technological Society", credit: 2 },
+          { code: "IA 3601", name: "Industrial Training", credit: 6 }
+        ]
+      },
+      "Level IV": {
+        "Semester 1": [
+          { code: "EN 4101", name: "Academic Writing Skills for Technology", credit: "NG" },
+          { code: "FT 4101", name: "Intellectual Property Rights", credit: 1 },
+          { code: "FT 4201", name: "Innovation and Entrepreneurship", credit: 2 },
+          { code: "IA 4201", name: "Power Electronics", credit: 2 },
+          { code: "IA 4202", name: "Induction Motor Drives and Programmable Logic Controllers", credit: 2 },
+          { code: "IA 4203", name: "Industrial Automation and Control", credit: 2 },
+          { code: "IA 4204", name: "Instrumentation Laboratory", credit: 2 },
+          { code: "IA 4205", name: "Engineering Economics and Financial Accounting", credit: 2 },
+          { code: "IA 4301", name: "Precision Measurement Techniques and Calibration of Instruments", credit: 3 }
+        ],
+        "Semester 2": [
+          { code: "EN 4102", name: "Advanced Communication Skills in English for Technology (II)", credit: "NG" },
+          { code: "IA 4206", name: "Shielding and Protection of Electronic Instruments", credit: 2 },
+          { code: "IA 4207", name: "Special Instrumentation Techniques", credit: 2 },
+          { code: "IA 4208", name: "Fibre Optics and Laser Instrumentation", credit: 2 },
+          { code: "IA 4209", name: "Nuclear and Medical Instrumentation", credit: 2 },
+          { code: "IA 4801", name: "Research Project", credit: 8 }
+        ]
+      }
+    };
+      let currentDept = 'AT';
+      let generalData = null;
+      let iatCurrent = null;
+      function defaultGeneral() { return { semesters: [{ id: Date.now(), name: 'Semester 1', courses: [{ id: Date.now()+1, name: '', grade: 'A', credits: 3 }] }] }; }
+      function loadGeneral(dept) { return loadJson(LS.generalGpa + dept, defaultGeneral()); }
+      function saveGeneral() { saveJson(LS.generalGpa + currentDept, generalData); }
+      function calcGeneral() {
+        let points = 0, credits = 0;
+        generalData.semesters.forEach(s => s.courses.forEach(c => { const cr = Number(c.credits) || 0; credits += cr; points += cr * (GRADE_POINTS[c.grade] ?? 0); }));
+        return credits ? points / credits : 0;
+      }
+      function renderGeneralGpa() {
+        $('generalDeptLabel').textContent = currentDept;
+        $('generalGpaValue').textContent = calcGeneral().toFixed(2);
+        $('gradeScaleGrid').innerHTML = Object.entries(GRADE_POINTS).map(([g,p]) => `<span>${g} = ${Number(p).toFixed(1)}</span>`).join('');
+        $('generalSemesters').innerHTML = generalData.semesters.map((s, si) => `
+          <div class="semester-card">
+            <div class="semester-head"><input data-sem-name="${si}" value="${safeText(s.name)}"><button class="btn btn-danger btn-small" data-remove-sem="${si}">Remove</button></div>
+            <div class="semester-body">
+              ${s.courses.map((c, ci) => `<div class="course-row"><input data-course-name="${si}:${ci}" value="${safeText(c.name)}" placeholder="Course name"><select data-course-grade="${si}:${ci}">${Object.keys(GRADE_POINTS).map(g => `<option ${g === c.grade ? 'selected' : ''}>${g}</option>`).join('')}</select><input type="number" step="0.5" min="0" data-course-credits="${si}:${ci}" value="${c.credits}"><button class="icon-action" data-remove-course="${si}:${ci}">✕</button></div>`).join('')}
+              <button class="btn btn-secondary btn-small" data-add-course="${si}"><i class="fa-solid fa-plus"></i> Add Course</button>
+            </div>
+          </div>`).join('');
+      }
+      function switchDept(dept) {
+        currentDept = dept;
+        qsa('.department-btn').forEach(b => b.classList.toggle('active', b.dataset.dept === dept));
+        $('generalGpaPanel').classList.toggle('hidden', dept === 'IAT');
+        $('iatGpaPanel').classList.toggle('hidden', dept !== 'IAT');
+        if (dept !== 'IAT') { generalData = loadGeneral(dept); renderGeneralGpa(); } else { renderIatSaved(); }
+      }
+      $('departmentButtons').addEventListener('click', e => { const btn = e.target.closest('[data-dept]'); if (btn) switchDept(btn.dataset.dept); });
+      $('addGeneralSemester').addEventListener('click', () => { generalData.semesters.push({ id: Date.now(), name: 'Semester ' + (generalData.semesters.length + 1), courses: [{ id: Date.now()+1, name:'', grade:'A', credits:3 }] }); saveGeneral(); renderGeneralGpa(); });
+      $('generalSemesters').addEventListener('input', e => {
+        const v = e.target.value;
+        if (e.target.dataset.semName) generalData.semesters[e.target.dataset.semName].name = v;
+        if (e.target.dataset.courseName) { const [s,c] = e.target.dataset.courseName.split(':').map(Number); generalData.semesters[s].courses[c].name = v; }
+        if (e.target.dataset.courseCredits) { const [s,c] = e.target.dataset.courseCredits.split(':').map(Number); generalData.semesters[s].courses[c].credits = v; }
+        saveGeneral(); renderGeneralGpa();
+      });
+      $('generalSemesters').addEventListener('change', e => { if (e.target.dataset.courseGrade) { const [s,c] = e.target.dataset.courseGrade.split(':').map(Number); generalData.semesters[s].courses[c].grade = e.target.value; saveGeneral(); renderGeneralGpa(); } });
+      $('generalSemesters').addEventListener('click', e => {
+        const add = e.target.closest('[data-add-course]'); const rc = e.target.closest('[data-remove-course]'); const rs = e.target.closest('[data-remove-sem]');
+        if (add) { const s = Number(add.dataset.addCourse); generalData.semesters[s].courses.push({ id: Date.now(), name:'', grade:'A', credits:3 }); }
+        if (rc) { const [s,c] = rc.dataset.removeCourse.split(':').map(Number); generalData.semesters[s].courses.splice(c,1); }
+        if (rs) { generalData.semesters.splice(Number(rs.dataset.removeSem),1); if (!generalData.semesters.length) generalData = defaultGeneral(); }
+        if (add || rc || rs) { saveGeneral(); renderGeneralGpa(); }
+      });
+      function showIatMessage(msg, type='success') { const box = $('iatMessage'); box.textContent = msg; box.className = 'message show ' + type; setTimeout(() => box.className = 'message', 2500); }
+      $('iatLevel').addEventListener('change', () => { const level = $('iatLevel').value; $('iatSemester').innerHTML = '<option value="">Select Semester</option>' + (level ? Object.keys(IAT_SUBJECT_DATA[level]).map(s => `<option>${s}</option>`).join('') : ''); $('iatSubjectBody').innerHTML = ''; });
+      $('iatSemester').addEventListener('change', loadIatSubjects);
+      function loadIatSubjects() {
+        const level = $('iatLevel').value, sem = $('iatSemester').value;
+        if (!level || !sem) { $('iatSubjectBody').innerHTML = ''; return; }
+        $('iatSubjectBody').innerHTML = IAT_SUBJECT_DATA[level][sem].map((sub, i) => `<tr><td>${sub.code}</td><td>${sub.name}</td><td>${sub.credit}</td><td>${sub.credit === 'NG' ? '<span class="soft-text">Not counted</span>' : `<select data-iat-grade="${i}"><option value="">Select</option>${Object.keys(GRADE_POINTS).filter(g => g !== 'E').map(g => `<option>${g}</option>`).join('')}</select>`}</td></tr>`).join('');
+      }
+      function calcIat() {
+        const level = $('iatLevel').value, sem = $('iatSemester').value;
+        if (!level || !sem) return showIatMessage('Please select level and semester.', 'error');
+        let gradeEls = qsa('[data-iat-grade]'), idx = 0, points = 0, credits = 0, grades = [];
+        for (const sub of IAT_SUBJECT_DATA[level][sem]) {
+          if (sub.credit === 'NG') continue;
+          const grade = gradeEls[idx]?.value || ''; idx += 1;
+          if (!grade) return showIatMessage('Please select all grades.', 'error');
+          credits += Number(sub.credit); points += Number(sub.credit) * (GRADE_POINTS[grade] ?? 0); grades.push(grade);
+        }
+        const gpa = credits ? points / credits : 0;
+        iatCurrent = { level, sem, credits, points, grades };
+        $('iatSemesterGpa').textContent = gpa.toFixed(2);
+        $('iatStatus').textContent = gpa >= 3.7 ? 'Excellent' : gpa >= 3 ? 'Good' : gpa >= 2 ? 'Average' : 'Need Improvement';
+        showIatMessage('GPA calculated successfully.');
+      }
+      $('calculateIatGpa').addEventListener('click', calcIat);
+      $('saveIatGpa').addEventListener('click', () => {
+        if (!iatCurrent) return showIatMessage('Calculate GPA first.', 'error');
+        let saved = loadJson(LS.iat, []);
+        const i = saved.findIndex(x => x.level === iatCurrent.level && x.sem === iatCurrent.sem);
+        if (i >= 0) saved[i] = iatCurrent; else saved.push(iatCurrent);
+        saveJson(LS.iat, saved); renderIatSaved(); showIatMessage('Semester saved.');
+      });
+      function renderIatSaved() {
+        const saved = loadJson(LS.iat, []); let credits = 0, points = 0;
+        $('iatSavedBody').innerHTML = saved.map((r, i) => { credits += r.credits; points += r.points; return `<tr><td>${r.level}</td><td>${r.sem}</td><td>${r.credits}</td><td>${(r.points/r.credits).toFixed(2)}</td><td><button class="btn btn-danger btn-small" data-del-iat="${i}">Delete</button></td></tr>`; }).join('') || '<tr><td colspan="5" class="empty">No saved semesters</td></tr>';
+        $('iatOverallCredits').textContent = credits;
+        $('iatOverallGpa').textContent = credits ? (points/credits).toFixed(2) : '0.00';
+      }
+      $('iatSavedBody').addEventListener('click', e => { const btn = e.target.closest('[data-del-iat]'); if (!btn) return; let saved = loadJson(LS.iat, []); saved.splice(Number(btn.dataset.delIat),1); saveJson(LS.iat,saved); renderIatSaved(); });
+
+      let subjects = loadJson(LS.subjects, ['IT', 'Engineering', 'Management']);
+      let resources = loadJson(LS.resources, [
+        { id: 1, title: 'Lecture Notes Template', url: '', subject: 'IT', notes: 'Sample resource. Replace this with your own notes.', favorite: true, date: new Date().toLocaleDateString() },
+        { id: 2, title: 'Past Paper Collection', url: '', subject: 'Engineering', notes: 'Add your real past paper link here.', favorite: false, date: new Date().toLocaleDateString() }
+      ]);
+      function renderResourceStats(filtered=resources.length) { $('subjectCount').textContent = subjects.length; $('resourceCount').textContent = resources.length; $('favoriteCount').textContent = resources.filter(r => r.favorite).length; $('filteredCount').textContent = filtered; $('homeTaskPreview').textContent = focusState.tasks.length; renderDashboardStats(); }
+      function renderSubjects() {
+        $('subjectList').innerHTML = subjects.map((s,i) => `<div class="subject-chip"><strong>${safeText(s)}</strong><button class="icon-action" data-del-subject="${i}">✕</button></div>`).join('') || '<div class="empty-state">No subjects yet.</div>';
+        const opts = '<option value="">Select Subject</option>' + subjects.map(s => `<option>${safeText(s)}</option>`).join('');
+        $('resourceSubject').innerHTML = opts;
+        $('resourceFilter').innerHTML = '<option value="">All Subjects</option>' + subjects.map(s => `<option>${safeText(s)}</option>`).join('');
+      }
+      function renderResources() {
+        const search = $('resourceSearch').value.toLowerCase(); const filter = $('resourceFilter').value;
+        const filtered = resources.filter(r => (r.title.toLowerCase().includes(search) || r.subject.toLowerCase().includes(search) || (r.notes||'').toLowerCase().includes(search)) && (!filter || r.subject === filter));
+        const card = r => `<div class="resource-card"><span class="tagline">${r.favorite ? '⭐ Favorite' : '📚 Resource'}</span><h4>${safeText(r.title)}</h4><p><strong>Subject:</strong> ${safeText(r.subject)}</p><p>${safeText(r.notes || 'No notes added.')}</p><p><small>Added: ${safeText(r.date)}</small></p><div class="hero-actions" style="margin-top:10px;">${r.url ? `<a class="btn btn-primary btn-small" href="${safeText(r.url)}" target="_blank">Open</a>` : ''}<button class="btn btn-danger btn-small" data-del-resource="${r.id}">Delete</button></div></div>`;
+        $('favoriteResources').innerHTML = resources.filter(r => r.favorite).map(card).join('');
+        $('resourceGrid').innerHTML = filtered.map(card).join('') || '<div class="empty-state">No resources found.</div>';
+        renderResourceStats(filtered.length);
+      }
+      $('addSubjectBtn').addEventListener('click', () => { const v = $('subjectInput').value.trim(); if (!v) return toast('Enter a subject name.'); if (!subjects.includes(v)) subjects.push(v); $('subjectInput').value=''; saveJson(LS.subjects, subjects); renderSubjects(); renderResources(); });
+      $('subjectList').addEventListener('click', e => { const btn = e.target.closest('[data-del-subject]'); if (!btn) return; subjects.splice(Number(btn.dataset.delSubject),1); saveJson(LS.subjects, subjects); renderSubjects(); renderResources(); });
+      $('saveResourceBtn').addEventListener('click', () => {
+        const title = $('resourceTitle').value.trim(), subject = $('resourceSubject').value;
+        if (!title || !subject) return toast('Fill title and subject.');
+        resources.unshift({ id: Date.now(), title, url: $('resourceUrl').value.trim(), subject, notes: $('resourceNotes').value.trim(), favorite: $('resourceFavorite').value === 'yes', date: new Date().toLocaleDateString() });
+        ['resourceTitle','resourceUrl','resourceNotes'].forEach(id => $(id).value=''); $('resourceFavorite').value='no'; $('resourceSubject').value='';
+        saveJson(LS.resources, resources); renderResources();
+      });
+      $('resourceSearch').addEventListener('input', renderResources); $('resourceFilter').addEventListener('change', renderResources);
+      $('resourceGrid').addEventListener('click', e => { const btn = e.target.closest('[data-del-resource]'); if (!btn) return; resources = resources.filter(r => String(r.id) !== btn.dataset.delResource); saveJson(LS.resources, resources); renderResources(); });
+      $('favoriteResources').addEventListener('click', e => { const btn = e.target.closest('[data-del-resource]'); if (!btn) return; resources = resources.filter(r => String(r.id) !== btn.dataset.delResource); saveJson(LS.resources, resources); renderResources(); });
+
+      let focusState = loadJson(LS.focus, { tasks: [], sessions: 0, focusMins: 25, shortMins: 5, longMins: 15 });
+      let timer = { mode:'focus', total: focusState.focusMins * 60, left: focusState.focusMins * 60, running:false, interval:null };
+      function timerDuration(mode) { return (mode === 'short' ? focusState.shortMins : mode === 'long' ? focusState.longMins : focusState.focusMins) * 60; }
+      function fmt(sec) { return String(Math.floor(sec/60)).padStart(2,'0') + ':' + String(sec%60).padStart(2,'0'); }
+      function updateTimerUi() {
+        $('timerDigits').textContent = fmt(timer.left);
+        $('timerState').textContent = timer.running ? 'Running' : (timer.mode === 'focus' ? 'Ready to focus' : 'Break mode');
+        const progress = timer.total ? ((timer.total - timer.left) / timer.total) * 100 : 0;
+        $('timerRing').style.setProperty('--timer-progress', progress + '%');
+        $('startPauseTimer').innerHTML = timer.running ? '<i class="fa-solid fa-pause"></i> Pause' : '<i class="fa-solid fa-play"></i> Start';
+      }
+      function setTimerMode(mode) { clearInterval(timer.interval); timer.mode = mode; timer.running = false; timer.total = timerDuration(mode); timer.left = timer.total; $('focusMode').value = mode; updateTimerUi(); }
+      function finishTimer() {
+        clearInterval(timer.interval); timer.running = false;
+        if (timer.mode === 'focus') { focusState.sessions += 1; saveJson(LS.focus, focusState); renderTodos(); setTimerMode(focusState.sessions % 4 === 0 ? 'long' : 'short'); toast('Focus session complete. Take a break.'); }
+        else { setTimerMode('focus'); toast('Break complete. Back to focus.'); }
+      }
+      $('startPauseTimer').addEventListener('click', () => {
+        timer.running = !timer.running;
+        if (timer.running) timer.interval = setInterval(() => { timer.left -= 1; if (timer.left <= 0) { timer.left = 0; updateTimerUi(); finishTimer(); } else updateTimerUi(); }, 1000);
+        else clearInterval(timer.interval);
+        updateTimerUi();
+      });
+      $('resetTimerBtn').addEventListener('click', () => setTimerMode(timer.mode));
+      $('nextTimerBtn').addEventListener('click', () => setTimerMode(timer.mode === 'focus' ? 'short' : timer.mode === 'short' ? 'long' : 'focus'));
+      $('focusMode').addEventListener('change', e => setTimerMode(e.target.value));
+      $('applyTimerBtn').addEventListener('click', () => {
+        focusState.focusMins = Math.max(1, Number($('focusMinutesInput').value) || 25);
+        focusState.shortMins = Math.max(1, Number($('shortMinutesInput').value) || 5);
+        focusState.longMins = Math.max(1, Number($('longMinutesInput').value) || 15);
+        saveJson(LS.focus, focusState); setTimerMode(timer.mode);
+      });
+      function renderTodos() {
+        $('todoList').innerHTML = focusState.tasks.map(t => `<div class="todo-item ${t.done ? 'done' : ''}"><button class="check-btn ${t.done ? 'done' : ''}" data-toggle-task="${t.id}">${t.done ? '✓' : ''}</button><div class="todo-text"><strong>${safeText(t.text)}</strong><small> · ${safeText(t.tag)}</small></div><button class="icon-action" data-delete-task="${t.id}">✕</button></div>`).join('') || '<div class="empty-state">No tasks yet.</div>';
+        $('focusSessions').textContent = focusState.sessions;
+        $('focusDoneTasks').textContent = focusState.tasks.filter(t => t.done).length;
+        saveJson(LS.focus, focusState); renderResourceStats();
+      }
+      $('addTodoBtn').addEventListener('click', () => { const text = $('todoInput').value.trim(); if (!text) return; focusState.tasks.unshift({ id: Date.now(), text, tag: $('todoTag').value, done:false }); $('todoInput').value=''; renderTodos(); });
+      $('todoList').addEventListener('click', e => {
+        const tog = e.target.closest('[data-toggle-task]'); const del = e.target.closest('[data-delete-task]');
+        if (tog) { const t = focusState.tasks.find(x => String(x.id) === tog.dataset.toggleTask); if (t) t.done = !t.done; }
+        if (del) focusState.tasks = focusState.tasks.filter(t => String(t.id) !== del.dataset.deleteTask);
+        if (tog || del) renderTodos();
+      });
+      $('clearCompletedBtn').addEventListener('click', () => { focusState.tasks = focusState.tasks.filter(t => !t.done); renderTodos(); });
+      $('saveNotesBtn').addEventListener('click', () => { localStorage.setItem(LS.notes, $('sessionNotes').value); toast('Notes saved.'); });
+      $('clearNotesBtn').addEventListener('click', () => { $('sessionNotes').value = ''; localStorage.removeItem(LS.notes); });
+
+      $('focusMinutesInput').value = focusState.focusMins; $('shortMinutesInput').value = focusState.shortMins; $('longMinutesInput').value = focusState.longMins; $('sessionNotes').value = localStorage.getItem(LS.notes) || '';
+      generalData = loadGeneral(currentDept);
+      switchDept('AT'); initTimetable(); renderDeadlines(); renderPriorityList(); renderSubjects(); renderTodos(); renderResources(); renderGeneralGpa(); updateClock(); setInterval(updateClock, 1000); setTimerMode('focus');
+    })();
+  </script>
+</body>
+</html>
